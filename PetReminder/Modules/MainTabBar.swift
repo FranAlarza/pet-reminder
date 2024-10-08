@@ -12,11 +12,17 @@ struct MainTabBar: View {
         TabView {
             PetsScreen()
                 .tabItem {
-                    Image(systemName: "pawprint.fill")
+                    VStack {
+                        Image(systemName: "pawprint.fill")
+                        Text("Pets")
+                    }
                 }
             SettingsScreen()
                 .tabItem {
-                    Image(systemName: "gear")
+                    VStack {
+                        Image(systemName: "gear")
+                        Text("Settings")
+                    }
                 }
         }
     }
