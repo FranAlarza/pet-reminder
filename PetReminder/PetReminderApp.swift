@@ -11,7 +11,7 @@ import SwiftUI
 struct PetReminderApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabBar()
         }
     }
 }
