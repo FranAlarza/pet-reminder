@@ -10,20 +10,25 @@ import SwiftUI
 struct MainTabBar: View {
     var body: some View {
         TabView {
-            PetsScreen()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "pawprint.fill")
-                        Text("Pets")
-                    }
+            NavigationStack {
+                PetsScreen()
+            }
+            .tabItem {
+                VStack {
+                    Image(systemName: "pawprint.fill")
+                    Text("Pets")
                 }
-            SettingsScreen()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "gear")
-                        Text("Settings")
-                    }
+            }
+            
+            NavigationStack {
+                SettingsScreen()
+            }
+            .tabItem {
+                VStack {
+                    Image(systemName: "gear")
+                    Text("Settings")
                 }
+            }
         }
     }
 }
