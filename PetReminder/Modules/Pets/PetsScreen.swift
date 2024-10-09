@@ -39,7 +39,7 @@ struct PetsScreen: View {
                     }
                 }
                 .listStyle(.plain)
-                .listRowSpacing(16)
+                .listRowSpacing(8)
             }
         }
         .navigationTitle("Pets")
