@@ -20,19 +20,25 @@ struct PetRow: View {
         }
         .background(
             RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
-                .fill(Color.white)
-                .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5) // Apply shadow here
+                .fill(Color(.primary))
+                .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
         )
     }
     
     var petAttributes: some View {
         VStack(alignment: .leading) {
-            Text(pet.name)
+            Text("\(pet.name), \(pet.age)")
                 .font(.system(.title))
             Text(pet.breed)
-                .font(.system(.subheadline))
+                .font(.system(.subheadline, weight: .light))
+            Text(pet.type.rawValue)
+                .font(.system(.subheadline, weight: .light))
+            Text(pet.colour)
+                .font(.system(.subheadline, weight: .light))
         }
+        .foregroundStyle(.primary)
         .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
     }
 }
 
@@ -42,6 +48,7 @@ struct PetRow: View {
             image: "dog_Example_Image",
             name: "Daisy",
             breed: "Podenco",
+            type: .dog,
             birth: .now,
             colour: "red",
             gender: .female
