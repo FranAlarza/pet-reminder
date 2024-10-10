@@ -1,5 +1,5 @@
 //
-//  PetsEndpoint.swift
+//  PetsEndpoints.swift
 //  PetReminder
 //
 //  Created by Fran Alarza on 9/10/24.
@@ -37,7 +37,7 @@ struct PetDTO: FirestoreIdentifiable {
     }
 }
 
-enum PetsEndpoint: FirestoreEndpoint {
+enum PetsEndpoints: FirestoreEndpoint {
     case getPets
     case postPet(dto: PetDTO)
     
