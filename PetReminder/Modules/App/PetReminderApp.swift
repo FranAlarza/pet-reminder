@@ -10,10 +10,14 @@ import SwiftUI
 @main
 struct PetReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    private let authService: AuthServiceProtocol = AuthService()
     
     var body: some Scene {
         WindowGroup {
             MainTabBar()
+                .task {
+                    await authService.login()
+                }
         }
     }
 }

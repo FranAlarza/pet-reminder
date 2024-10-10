@@ -37,9 +37,22 @@
 		267C179F2CB5A892009A5485 /* PetReminderUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PetReminderUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		260A262D2CB7373B001A5399 /* Exceptions for "PetReminder" folder in "PetReminder" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 267C17842CB5A891009A5485 /* PetReminder */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		267C17872CB5A891009A5485 /* PetReminder */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				260A262D2CB7373B001A5399 /* Exceptions for "PetReminder" folder in "PetReminder" target */,
+			);
 			path = PetReminder;
 			sourceTree = "<group>";
 		};
@@ -420,6 +433,8 @@
 				DEVELOPMENT_TEAM = 8AN9PR7GP3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PetReminder/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pet Reminder";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -450,6 +465,8 @@
 				DEVELOPMENT_TEAM = 8AN9PR7GP3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PetReminder/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Pet Reminder";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
