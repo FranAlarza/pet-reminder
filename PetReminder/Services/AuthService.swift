@@ -17,7 +17,7 @@ final class AuthService: AuthServiceProtocol {
     
     func login() async {
         do {
-            let userId = try await Auth.auth().signInAnonymously().user.uid
+            let userId = Auth.auth().currentUser?.uid ?? ""
             let userExist = try await Firestore.firestore().collection("users").whereField("id", isEqualTo: userId).getDocuments()
             if userExist.isEmpty {
                 await register(userId: userId)

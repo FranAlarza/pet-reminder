@@ -7,41 +7,60 @@
 
 import SwiftUI
 
-enum PetScreenState: CaseIterable {
-    case loaded
+enum PetScreenState: Equatable {
+    case loaded([Pet])
     case loading
     case error
+    case empty
 }
 
 struct PetsScreen: View {
+    
+    @ObservedObject
+    var petViewModel: PetViewModel = PetViewModel()
+    
     @State
     var isAddPetFormPresented: Bool = false
-    @State var pets: [Pet] = []
     
     var body: some View {
         Group {
-            if pets.isEmpty {
+            switch petViewModel.petState {
+            case .empty:
                 VStack(spacing: 32) {
                     Image(systemName: "pawprint.fill")
                         .font(.title)
                     Text("No pets yet. Add one below.")
                 }
-            } else {
+            case .loading:
+                ZStack {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(3)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.black.opacity(0.5))
+                
+            case .loaded(let pets):
                 List {
                     ForEach(pets) { pet in
-                        PetRow(pet: pet)
-                            .swipeActions {
-                                Button(action: {}) {
-                                    Image(systemName: "trash")
+                        NavigationLink(value: pet, label: {
+                            PetRow(pet: pet)
+                                .swipeActions {
+                                    Button(action: {}) {
+                                        Image(systemName: "trash")
+                                    }
                                 }
-                            }
-                            .listRowSeparator(.hidden)
+                                .listRowSeparator(.hidden)
+                        })
                     }
                 }
                 .listStyle(.plain)
                 .listRowSpacing(8)
+                case .error:
+                Text("Error loading pets.")
             }
         }
+        .animation(.easeInOut(duration: 1), value: petViewModel.petState)
         .navigationTitle("Pets")
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -53,14 +72,17 @@ struct PetsScreen: View {
             }
         })
         .fullScreenCover(isPresented: $isAddPetFormPresented, content: {
-            AddPetFormScreen()
+            AddPetScreen()
         })
+        .navigationDestination(for: Pet.self) { pet in
+            PetDetailScreen(pet: pet)
+        }
     }
 }
 
 #Preview("Data") {
     NavigationStack {
-        PetsScreen(pets: Pet.sample)
+        PetsScreen()
     }
 }
 

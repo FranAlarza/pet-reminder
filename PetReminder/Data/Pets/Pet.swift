@@ -9,7 +9,7 @@ import Foundation
 
 struct Pet: Hashable, Identifiable {
     var id: UUID = .init()
-    let image: String
+    let image: Data
     let name: String
     let breed: String
     let type: AnimalType
@@ -39,7 +39,7 @@ extension Pet: Equatable {
     static let sample: [Pet] =
     [
         .init(
-            image: "dog_Example_Image",
+            image: Data(),
             name: "Rex",
             breed: "Labrador Retriever",
             type: .dog,
@@ -48,7 +48,7 @@ extension Pet: Equatable {
             gender: .male
         ),
         .init(
-            image: "koala_Example_Image",
+            image: Data(),
             name: "Mia",
             breed: "Koala",
             type: .other,
@@ -57,7 +57,7 @@ extension Pet: Equatable {
             gender: .female
         ),
         .init(
-            image: "monkey_Example_Image",
+            image: Data(),
             name: "Tweety",
             breed: "Orangutan",
             type: .other,
@@ -66,7 +66,7 @@ extension Pet: Equatable {
             gender: .male
         ),
         .init(
-            image: "rabbit_Example_Image",
+            image: Data(),
             name: "Flipper",
             breed: "White Rabbit",
             type: .rabbit,
@@ -75,7 +75,7 @@ extension Pet: Equatable {
             gender: .female
         ),
         .init(
-            image: "tejon_Example_Image",
+            image: Data(),
             name: "Cafu",
             breed: "Tejon",
             type: .other,

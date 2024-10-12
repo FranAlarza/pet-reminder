@@ -12,6 +12,7 @@
 		260A24FF2CB6FA1F001A5399 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 260A24FE2CB6FA1F001A5399 /* FirebaseCrashlytics */; };
 		260A25012CB6FA1F001A5399 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 260A25002CB6FA1F001A5399 /* FirebaseFirestore */; };
 		260A25032CB6FA1F001A5399 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 260A25022CB6FA1F001A5399 /* FirebaseRemoteConfig */; };
+		267A33F62CB99D27000326E6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 267A33F52CB99D27000326E6 /* FirebaseStorage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +39,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		260A262D2CB7373B001A5399 /* Exceptions for "PetReminder" folder in "PetReminder" target */ = {
+		26B283032CB84655004980A3 /* Exceptions for "PetReminder" folder in "PetReminder" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -51,7 +52,7 @@
 		267C17872CB5A891009A5485 /* PetReminder */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				260A262D2CB7373B001A5399 /* Exceptions for "PetReminder" folder in "PetReminder" target */,
+				26B283032CB84655004980A3 /* Exceptions for "PetReminder" folder in "PetReminder" target */,
 			);
 			path = PetReminder;
 			sourceTree = "<group>";
@@ -78,6 +79,7 @@
 				260A24FB2CB6FA1F001A5399 /* FirebaseAnalytics in Frameworks */,
 				260A24FD2CB6FA1F001A5399 /* FirebaseAuth in Frameworks */,
 				260A25032CB6FA1F001A5399 /* FirebaseRemoteConfig in Frameworks */,
+				267A33F62CB99D27000326E6 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,6 +145,7 @@
 				260A24FE2CB6FA1F001A5399 /* FirebaseCrashlytics */,
 				260A25002CB6FA1F001A5399 /* FirebaseFirestore */,
 				260A25022CB6FA1F001A5399 /* FirebaseRemoteConfig */,
+				267A33F52CB99D27000326E6 /* FirebaseStorage */,
 			);
 			productName = PetReminder;
 			productReference = 267C17852CB5A891009A5485 /* PetReminder.app */;
@@ -435,6 +438,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetReminder/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Pet Reminder";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos acceder a la camara para tomar un selfie a tu mascota";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Necesitamos acceder a la libreria para que puedas seleccionar la mejor foto de tu mascota";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -467,6 +472,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetReminder/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Pet Reminder";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos acceder a la camara para tomar un selfie a tu mascota";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Necesitamos acceder a la libreria para que puedas seleccionar la mejor foto de tu mascota";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -635,6 +642,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 260A24F92CB6FA1F001A5399 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseRemoteConfig;
+		};
+		267A33F52CB99D27000326E6 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 260A24F92CB6FA1F001A5399 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
