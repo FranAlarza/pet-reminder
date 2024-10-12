@@ -6,28 +6,40 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 @MainActor
 final class PetViewModel: ObservableObject {
     
     @Published var petState: PetScreenState = .loading
 
+    private var listeners: [ListenerRegistration] = []
+    
     init() {
-        Task {
-            await getPets()
-        }
+        suscribeToPets()
     }
     
-    func getPets() async {
-        petState = .loading
-        do {
-            let pets: [PetDTO] = try await FirestoreService.request(PetsEndpoints.getPets)
-            let mappedPets = await mapPets(pets)
-            petState = pets.isEmpty ? .empty : .loaded(mappedPets)
-            print("Successfully fetched pets with state: \(petState)")
-        } catch {
-            petState = .error
-            print("Error fetching pets: \(error.localizedDescription)")
+    deinit {
+        listeners.forEach { $0.remove() }
+    }
+    
+    func suscribeToPets() {
+        let subscription = FirestoreService.subscribe(PetsEndpoints.getPets) { (result: Result<[PetDTO], FirestoreServiceError>) in
+            switch result {
+            case .success(let items):
+                Task {
+                    let mappedPets: [Pet] = await self.mapPets(items)
+                    self.petState = items.isEmpty ? .empty : .loaded(mappedPets)
+                    print("Successfully subscribed to pets with state: \(self.petState)")
+                }
+            case .failure(let error):
+                self.petState = .error
+                print("Error subscribing to pets: \(error.localizedDescription)")
+            }
+        }
+        
+        if let subscription {
+            listeners.append(subscription)
         }
     }
     

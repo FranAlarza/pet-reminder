@@ -108,4 +108,41 @@ public final class FirestoreService: FirestoreServicProtocol {
             }
         }
     }
+    
+    // MARK: - Try to convert to async await with async stream maybe
+    public static func subscribe<T>(_ endpoint: any FirestoreEndpoint, onUpdate: @escaping (Result<[T], FirestoreServiceError>) -> Void) -> ListenerRegistration? where T: FirestoreIdentifiable {
+        guard let ref = endpoint.path as? CollectionReference else {
+            onUpdate(.failure(.collectionNotFound))
+            return nil
+        }
+        
+        let listener = ref.addSnapshotListener { querySnapshot, error in
+            if let error = error {
+                onUpdate(.failure(.operationNotSupported))
+                print("Error subscribing to collection: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                onUpdate(.failure(.parseError))
+                return
+            }
+            
+            var response: [T] = []
+            for document in documents {
+                do {
+                    let data = try FirestoreParser.parse(document.data(), type: T.self)
+                    response.append(data)
+                } catch {
+                    onUpdate(.failure(.parseError))
+                    return
+                }
+            }
+            
+            onUpdate(.success(response))
+        }
+        
+        return listener
+    }
+
 }

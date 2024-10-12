@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum PetScreenState {
+enum PetScreenState: Equatable {
     case loaded([Pet])
     case loading
     case error
@@ -21,9 +21,6 @@ struct PetsScreen: View {
     
     @State
     var isAddPetFormPresented: Bool = false
-    
-    @State
-    var pets: [Pet] = []
     
     var body: some View {
         Group {
@@ -46,13 +43,15 @@ struct PetsScreen: View {
             case .loaded(let pets):
                 List {
                     ForEach(pets) { pet in
-                        PetRow(pet: pet)
-                            .swipeActions {
-                                Button(action: {}) {
-                                    Image(systemName: "trash")
+                        NavigationLink(value: pet, label: {
+                            PetRow(pet: pet)
+                                .swipeActions {
+                                    Button(action: {}) {
+                                        Image(systemName: "trash")
+                                    }
                                 }
-                            }
-                            .listRowSeparator(.hidden)
+                                .listRowSeparator(.hidden)
+                        })
                     }
                 }
                 .listStyle(.plain)
@@ -61,7 +60,7 @@ struct PetsScreen: View {
                 Text("Error loading pets.")
             }
         }
-        .animation(.easeInOut(duration: 1), value: pets)
+        .animation(.easeInOut(duration: 1), value: petViewModel.petState)
         .navigationTitle("Pets")
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -75,12 +74,15 @@ struct PetsScreen: View {
         .fullScreenCover(isPresented: $isAddPetFormPresented, content: {
             AddPetScreen()
         })
+        .navigationDestination(for: Pet.self) { pet in
+            PetDetailScreen(pet: pet)
+        }
     }
 }
 
 #Preview("Data") {
     NavigationStack {
-        PetsScreen(pets: Pet.sample)
+        PetsScreen()
     }
 }
 

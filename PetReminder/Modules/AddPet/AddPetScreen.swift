@@ -47,6 +47,8 @@ struct AddPetScreen: View {
                 birth: Timestamp(date: birth)
             )
             try await FirestoreService.request(PetsEndpoints.postPet(dto: dto))
+            print("Pet added successfully")
+            dismiss.callAsFunction()
         } catch {
             print("Error adding pet: \(error)")
         }
