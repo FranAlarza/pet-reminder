@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import FirebaseStorage
 
 public protocol FirestoreServicProtocol {
     static func request<T: FirestoreIdentifiable>(_ endpoint: FirestoreEndpoint) async throws -> T
@@ -72,6 +73,39 @@ public final class FirestoreService: FirestoreServicProtocol {
             try await ref.setData(model.asDictionary())
         case .delete:
             try await ref.delete()
+        }
+    }
+    
+    public static func uploadImage(_ image: UIImage?) async throws -> String? {
+        guard let image else {
+            return nil
+        }
+        
+        let storageRef = Storage.storage().reference().child("images/\(UUID().uuidString).jpg")
+        
+        guard let imageData = image.jpegData(compressionQuality: 0.7) else {
+            return nil
+        }
+        
+        let metaData = try await storageRef.putDataAsync(imageData)
+
+        return metaData.path
+    }
+    
+    public static func downloadImage(_ url: String) async -> Data? {
+        return await withCheckedContinuation { continuation in
+            let storageRef = Storage.storage().reference(withPath: url)
+            
+            storageRef.getData(maxSize: 4 * 1024 * 1024) { result in
+                switch result {
+                case .success(let data):
+                    print("Image downloaded successfully")
+                    continuation.resume(returning: data)
+                case .failure(let error):
+                    print("Error downloading image \(error.localizedDescription)")
+                    continuation.resume(returning: nil)
+                }
+            }
         }
     }
 }

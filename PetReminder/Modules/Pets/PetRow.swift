@@ -11,7 +11,7 @@ struct PetRow: View {
     let pet: Pet
     var body: some View {
         HStack(alignment: .top) {
-            Image(pet.image)
+            Image(uiImage: UIImage(data: pet.image) ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 150, height: 150)
@@ -20,7 +20,7 @@ struct PetRow: View {
         }
         .background(
             RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
-                .fill(Color(.primary))
+                .fill(Color(.systemBackground))
                 .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
         )
     }
@@ -45,7 +45,7 @@ struct PetRow: View {
 #Preview {
     PetRow(
         pet: .init(
-            image: "dog_Example_Image",
+            image: Data(),
             name: "Daisy",
             breed: "Podenco",
             type: .dog,

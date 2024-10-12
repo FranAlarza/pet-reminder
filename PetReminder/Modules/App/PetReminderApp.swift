@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import FirebaseCore
+import FirebaseAuth
 
 @main
 struct PetReminderApp: App {
@@ -16,7 +18,13 @@ struct PetReminderApp: App {
         WindowGroup {
             MainTabBar()
                 .task {
-                    await authService.login()
+                    do {
+                        try await Auth.auth().signInAnonymously()
+                        print("[PetReminderApp] - Signed in anonymously")
+                        await authService.login()
+                    } catch {
+                        print("[PetReminderApp] - Error signing in anonymously: \(error)")
+                    }
                 }
         }
     }
