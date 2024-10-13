@@ -65,7 +65,7 @@ struct PetDetailScreen: View {
                     attributeCard(title: "Age", value: "\(pet.age)")
                     attributeCard(title: "Gender", value: "\(pet.gender.rawValue.capitalized)")
                     attributeCard(title: "Colour", value: "\(pet.colour)")
-                    attributeCard(title: "Lenght", value: "9")
+                    attributeCard(title: "Lenght", value: "\(pet.weight) \(pet.weightUnit)")
                 }
                 Divider()
                     .background(.attributesText)
@@ -101,14 +101,19 @@ struct PetDetailScreen: View {
 
 #Preview {
     PetDetailScreen(
-        pet: .init(
-            image: Data(),
-            name: "Daisy",
-            breed: "Podenco",
-            type: .dog,
-            birth: Date(),
-            colour: "Canela",
-            gender: .male
-        )
+        pet:
+                .init(
+                    id: UUID().uuidString,
+                    image: Data(),
+                    name: "Cafu",
+                    breed: "Tejon",
+                    type: .other,
+                    birth: .init(),
+                    colour: "Green",
+                    weight: 10,
+                    weightUnit: "kg",
+                    gender: .male,
+                    createdAt: Date()
+                )
     )
 }

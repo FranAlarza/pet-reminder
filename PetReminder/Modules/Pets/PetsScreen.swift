@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-enum PetScreenState: Equatable {
-    case loaded([Pet])
+enum ScreenState<T: Equatable>: Equatable {
+    case loaded([T])
     case loading
     case error
     case empty
@@ -32,32 +32,30 @@ struct PetsScreen: View {
                     Text("No pets yet. Add one below.")
                 }
             case .loading:
-                ZStack {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .scaleEffect(3)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(.black.opacity(0.5))
-                
+                LoadingView()
             case .loaded(let pets):
                 List {
                     ForEach(pets) { pet in
-                        NavigationLink(value: pet, label: {
-                            PetRow(pet: pet)
-                                .swipeActions {
-                                    Button(action: {}) {
-                                        Image(systemName: "trash")
-                                    }
+                        PetRow(pet: pet)
+                            .swipeActions {
+                                Button(action: {}) {
+                                    Image(systemName: "trash")
                                 }
-                                .listRowSeparator(.hidden)
-                        })
+                            }
+                            .overlay {
+                                NavigationLink(value: pet, label: {})
+                                    .opacity(0)
+                            }
+                        
+                        .listRowSeparator(.hidden)
                     }
                 }
                 .listStyle(.plain)
                 .listRowSpacing(8)
                 case .error:
                 Text("Error loading pets.")
+            case .none:
+                EmptyView()
             }
         }
         .animation(.easeInOut(duration: 1), value: petViewModel.petState)
@@ -82,12 +80,12 @@ struct PetsScreen: View {
 
 #Preview("Data") {
     NavigationStack {
-        PetsScreen()
+        PetsScreen(petViewModel: PetViewModel(isTesting: true))
     }
 }
 
 #Preview("Empty") {
     NavigationStack {
-        PetsScreen()
+        PetsScreen(petViewModel: PetViewModel(isTesting: true))
     }
 }

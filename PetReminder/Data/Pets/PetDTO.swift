@@ -16,6 +16,10 @@ struct PetDTO: FirestoreIdentifiable {
     let type: String
     let colour: String
     let birth: Timestamp
+    let weight: Double
+    let weightUnit: String
+    let gender: PetGender
+    let createdAt: Timestamp
     
     init(
         id: String = UUID().uuidString,
@@ -24,7 +28,11 @@ struct PetDTO: FirestoreIdentifiable {
         breed: String,
         type: String,
         colour: String,
-        birth: Timestamp
+        birth: Timestamp,
+        weight: Double,
+        weightUnit: String,
+        gender: PetGender,
+        createdAt: Timestamp = .init()
     ) {
         self.id = id
         self.image = image
@@ -33,5 +41,9 @@ struct PetDTO: FirestoreIdentifiable {
         self.type = type
         self.colour = colour
         self.birth = birth
+        self.weight = weight
+        self.weightUnit = weightUnit
+        self.gender = gender
+        self.createdAt = createdAt
     }
 }

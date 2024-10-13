@@ -8,18 +8,20 @@
 import SwiftUI
 import FirebaseCore
 
-/*
- var id: String
- let image: String
- let name: String
- let breed: String
- let type: String
- let colour: String
- let birth: Timestamp
- **/
+enum AddPetScreeState {
+    case error
+    case success
+    case loading
+}
+
+enum WeightUnit: String, CaseIterable {
+    case lbs
+    case kg
+}
 
 struct AddPetScreen: View {
     @Environment(\.dismiss) var dismiss
+    @State var state: AddPetScreeState?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     // Form Data
@@ -28,6 +30,8 @@ struct AddPetScreen: View {
     @State var breed: String = "Podenco"
     @State var type: AnimalType = .dog
     @State var color: String = "Canela"
+    @State var weight: Double = 5
+    @State var weightUnit: WeightUnit = .kg
     @State var birth: Date = Date()
     
     // Sheets Controls
@@ -37,6 +41,7 @@ struct AddPetScreen: View {
     
     func addPet() async {
         do {
+            state = .loading
             let url = try await FirestoreService.uploadImage(inputImage) ?? ""
             let dto: PetDTO = .init(
                 image: url,
@@ -44,12 +49,16 @@ struct AddPetScreen: View {
                 breed: breed,
                 type: type.rawValue,
                 colour: color,
-                birth: Timestamp(date: birth)
+                birth: Timestamp(date: birth),
+                weight: weight,
+                weightUnit: weightUnit.rawValue,
+                gender: .male
             )
             try await FirestoreService.request(PetsEndpoints.postPet(dto: dto))
             print("Pet added successfully")
             dismiss.callAsFunction()
         } catch {
+            state = .error
             print("Error adding pet: \(error)")
         }
     }
@@ -77,13 +86,22 @@ struct AddPetScreen: View {
                 }
             }) {
                 Text("Add Pet")
+                    .padding()
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .center)
+                    .background(Color(.attributesText))
+                    .foregroundStyle(.white)
+
             }
-            .padding()
-            .buttonStyle(.borderedProminent)
+            .cornerRadius(16)
+            .padding(.horizontal)
             Spacer()
         }
+        .overlay(content: {
+            if state == .loading {
+                LoadingView()
+            }
+        })
         .sheet(isPresented: $isTakePhotoSheetShowed) {
             takePhotoSheetOptions
         }
@@ -103,7 +121,7 @@ struct AddPetScreen: View {
                label: {
             Image(systemName: "xmark.circle.fill")
                 .font(.system(size: 26))
-                .foregroundStyle(Color(.primary))
+                .foregroundStyle(Color(.attributesText))
         })
     }
     
@@ -138,6 +156,17 @@ struct AddPetScreen: View {
                     .submitLabel(.next)
                 TextField("Color", text: $color)
                     .submitLabel(.next)
+                HStack {
+                    TextField("Weight", value: $weight, format: .number)
+                        .keyboardType(.numberPad)
+                        .submitLabel(.next)
+                    Picker("Unit", selection: $weightUnit) {
+                        ForEach(WeightUnit.allCases, id: \.self) { unit in
+                            Text(unit.rawValue.capitalized)
+                        }
+                    }
+                }
+                
                 DatePicker("Birthday", selection: $birth, displayedComponents: [.date])
             }
             
@@ -192,6 +221,9 @@ struct AddPetScreen: View {
         .padding(32)
         .font(.headline)
         .presentationDetents([.fraction(0.25)])
+        .onTapGesture {
+            UIApplication.shared.dismissKeyboard()
+        }
     }
     
     var addRemainderForm: some View {

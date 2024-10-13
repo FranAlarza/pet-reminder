@@ -30,6 +30,7 @@ struct MainTabBar: View {
                 }
             }
         }
+        .toolbarColorScheme(.light, for: .tabBar)
     }
 }
 

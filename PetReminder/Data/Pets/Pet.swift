@@ -8,14 +8,17 @@
 import Foundation
 
 struct Pet: Hashable, Identifiable {
-    var id: UUID = .init()
+    let id: String
     let image: Data
     let name: String
     let breed: String
     let type: AnimalType
     let birth: Date
     let colour: String
+    let weight: Double
+    let weightUnit: String
     let gender: PetGender
+    let createdAt: Date
     
     var age: Int {
         Calendar.current
@@ -39,49 +42,69 @@ extension Pet: Equatable {
     static let sample: [Pet] =
     [
         .init(
+            id: UUID().uuidString,
             image: Data(),
             name: "Rex",
             breed: "Labrador Retriever",
             type: .dog,
             birth: .init(),
             colour: "Black",
-            gender: .male
+            weight: 10,
+            weightUnit: "kg",
+            gender: .male,
+            createdAt: Date()
         ),
         .init(
+            id: UUID().uuidString,
             image: Data(),
             name: "Mia",
             breed: "Koala",
             type: .other,
             birth: .init(),
             colour: "White",
-            gender: .female
+            weight: 10,
+            weightUnit: "kg",
+            gender: .female,
+            createdAt: Date()
         ),
         .init(
+            id: UUID().uuidString,
             image: Data(),
             name: "Tweety",
             breed: "Orangutan",
             type: .other,
             birth: .init(),
             colour: "Yellow",
-            gender: .male
+            weight: 10,
+            weightUnit: "kg",
+            gender: .male,
+            createdAt: Date()
         ),
         .init(
+            id: UUID().uuidString,
             image: Data(),
             name: "Flipper",
             breed: "White Rabbit",
             type: .rabbit,
             birth: .init(),
             colour: "Orange",
-            gender: .female
+            weight: 10,
+            weightUnit: "kg",
+            gender: .female,
+            createdAt: Date()
         ),
         .init(
+            id: UUID().uuidString,
             image: Data(),
             name: "Cafu",
             breed: "Tejon",
             type: .other,
             birth: .init(),
             colour: "Green",
-            gender: .male
+            weight: 10,
+            weightUnit: "kg",
+            gender: .male,
+            createdAt: Date()
         )
     ]
 }

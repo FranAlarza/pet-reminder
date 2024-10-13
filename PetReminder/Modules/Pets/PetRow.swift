@@ -44,14 +44,18 @@ struct PetRow: View {
 
 #Preview {
     PetRow(
-        pet: .init(
+        pet:  .init(
+            id: UUID().uuidString,
             image: Data(),
-            name: "Daisy",
-            breed: "Podenco",
-            type: .dog,
-            birth: .now,
-            colour: "red",
-            gender: .female
+            name: "Cafu",
+            breed: "Tejon",
+            type: .other,
+            birth: .init(),
+            colour: "Green",
+            weight: 10,
+            weightUnit: "kg",
+            gender: .male,
+            createdAt: Date()
         )
     )
 }

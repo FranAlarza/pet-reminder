@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.franalarza.pet-reminder</string>
+	<string>com.franalarza.pet-buddy</string>
 	<key>PROJECT_ID</key>
 	<string>petreminder-5f642</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:651251519675:ios:bca15e1565dc05cf5f999e</string>
+	<string>1:651251519675:ios:e1560a8db296eb415f999e</string>
+	<key>DATABASE_URL</key>
+	<string>https://petreminder-5f642-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

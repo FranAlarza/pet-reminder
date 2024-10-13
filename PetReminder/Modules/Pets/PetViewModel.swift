@@ -11,12 +11,17 @@ import FirebaseFirestore
 @MainActor
 final class PetViewModel: ObservableObject {
     
-    @Published var petState: PetScreenState = .loading
+    @Published var petState: ScreenState<Pet>?
 
     private var listeners: [ListenerRegistration] = []
     
-    init() {
-        suscribeToPets()
+    init(isTesting: Bool = false) {
+        if isTesting {
+            petState = .loading
+            petState = .loaded(Pet.sample)
+        } else {
+            suscribeToPets()
+        }
     }
     
     deinit {
@@ -24,16 +29,17 @@ final class PetViewModel: ObservableObject {
     }
     
     func suscribeToPets() {
-        let subscription = FirestoreService.subscribe(PetsEndpoints.getPets) { (result: Result<[PetDTO], FirestoreServiceError>) in
+        let subscription = FirestoreService.subscribe(PetsEndpoints.getPets) { [weak self] (result: Result<[PetDTO], FirestoreServiceError>) in
+            self?.petState = .loading
             switch result {
             case .success(let items):
                 Task {
-                    let mappedPets: [Pet] = await self.mapPets(items)
-                    self.petState = items.isEmpty ? .empty : .loaded(mappedPets)
-                    print("Successfully subscribed to pets with state: \(self.petState)")
+                    let mappedPets: [Pet] = await self?.mapPets(items) ?? []
+                    self?.petState = items.isEmpty ? .empty : .loaded(mappedPets)
+                    print("Successfully subscribed to pets with state: \(String(describing: self?.petState))")
                 }
             case .failure(let error):
-                self.petState = .error
+                self?.petState = .error
                 print("Error subscribing to pets: \(error.localizedDescription)")
             }
         }
@@ -52,13 +58,17 @@ final class PetViewModel: ObservableObject {
                     let image = await FirestoreService.downloadImage(pet.image)
                     
                     return Pet(
+                        id: pet.id,
                         image: image ?? Data() ,
                         name: pet.name,
                         breed: pet.breed,
                         type: AnimalType(rawValue: pet.type) ?? .dog,
                         birth: pet.birth.dateValue(),
                         colour: pet.colour,
-                        gender: .male
+                        weight: pet.weight,
+                        weightUnit: pet.weightUnit,
+                        gender: .male,
+                        createdAt: pet.createdAt.dateValue()
                     )
                 }
             }
@@ -66,7 +76,7 @@ final class PetViewModel: ObservableObject {
             for await pet in group {
                 result.append(pet)
             }
-            
+            result.sort(by: { $1.createdAt < $0.createdAt })
             return result
         }
     }
