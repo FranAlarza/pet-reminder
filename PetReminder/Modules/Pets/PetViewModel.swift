@@ -13,9 +13,14 @@ final class PetViewModel: ObservableObject {
     
     @Published var petState: ScreenState<Pet>?
 
+    private let notificationManager: NotificationManagerProtocol
     private var listeners: [ListenerRegistration] = []
     
-    init(isTesting: Bool = false) {
+    init(
+        notificationManager: NotificationManagerProtocol = NotificationManager(),
+        isTesting: Bool = false
+    ) {
+        self.notificationManager = notificationManager
         if isTesting {
             petState = .loading
             petState = .loaded(Pet.sample)
@@ -46,6 +51,45 @@ final class PetViewModel: ObservableObject {
         
         if let subscription {
             listeners.append(subscription)
+        }
+    }
+    
+    func addPet(pet: PetDTO, reminders: [PetNotificationDTO], inputImage: UIImage) async throws {
+        let url = try await FirestoreService.uploadImage(inputImage) ?? ""
+        let dto: PetDTO = .init(
+            image: url,
+            name: pet.name,
+            breed: pet.breed,
+            type: pet.type,
+            colour: pet.colour,
+            birth: pet.birth,
+            weight: pet.weight,
+            weightUnit: pet.weightUnit,
+            gender: pet.gender
+        )
+        try await FirestoreService.request(PetsEndpoints.postPet(dto: dto))
+        try await addReminders(reminders: reminders, petId: dto.id)
+    }
+    
+    func addReminders(reminders: [PetNotificationDTO], petId: String) async throws {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for reminder in reminders {
+                group.addTask {
+                    try await FirestoreService.request(NotificationsEndpoints.postNotifications(reminder, petId))
+                }
+            }
+            
+            try await group.waitForAll()
+        }
+        
+    }
+    
+    func addNotification(pet: PetNotification) async {
+        do {
+            try await notificationManager.scheduleNotificationWithAditionalNotification(notification: pet)
+            print("Notification added successfully")
+        } catch {
+            print("error: \(error.localizedDescription)")
         }
     }
     

@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum NotificationRepeatInterval: String, CaseIterable, Identifiable {
-    case none = "No Repetir"
-    case daily = "Diariamente"
-    case weekly = "Semanalmente"
-    case monthly = "Mensualmente"
-    case quarterly = "Trimestralmente"
-    case annually = "Anualmente"
+enum NotificationRepeatInterval: String, CaseIterable, Identifiable, Codable {
+    case noRepeat
+    case daily
+    case weekly
+    case monthly
+    case quarterly
+    case annually
     
     var id: String { self.rawValue }
 }

@@ -16,7 +16,7 @@ enum ScreenState<T: Equatable>: Equatable {
 
 struct PetsScreen: View {
     
-    @ObservedObject
+    @StateObject
     var petViewModel: PetViewModel = PetViewModel()
     
     @State
@@ -71,6 +71,7 @@ struct PetsScreen: View {
         })
         .fullScreenCover(isPresented: $isAddPetFormPresented, content: {
             AddPetScreen()
+                .environmentObject(petViewModel)
         })
         .navigationDestination(for: Pet.self) { pet in
             PetDetailScreen(pet: pet)

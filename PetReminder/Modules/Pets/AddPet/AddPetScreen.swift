@@ -21,6 +21,7 @@ enum WeightUnit: String, CaseIterable {
 
 struct AddPetScreen: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var viewModel: PetViewModel
     @State var state: AddPetScreeState?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
@@ -33,34 +34,18 @@ struct AddPetScreen: View {
     @State var weight: Double = 5
     @State var weightUnit: WeightUnit = .kg
     @State var birth: Date = Date()
+    @State var petNotification: PetNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, aditionalNotifications: false)
+    @State var petNotifications: [PetNotificationDTO] = []
     
     // Sheets Controls
     @State var isTakePhotoSheetShowed: Bool = false
     @State var isShowingImagePicker: Bool = false
     @State var isShowingAddReminder: Bool = false
     
-    func addPet() async {
-        do {
-            state = .loading
-            let url = try await FirestoreService.uploadImage(inputImage) ?? ""
-            let dto: PetDTO = .init(
-                image: url,
-                name: name,
-                breed: breed,
-                type: type.rawValue,
-                colour: color,
-                birth: Timestamp(date: birth),
-                weight: weight,
-                weightUnit: weightUnit.rawValue,
-                gender: .male
-            )
-            try await FirestoreService.request(PetsEndpoints.postPet(dto: dto))
-            print("Pet added successfully")
-            dismiss.callAsFunction()
-        } catch {
-            state = .error
-            print("Error adding pet: \(error)")
-        }
+    func addReminder() async {
+        await viewModel.addNotification(pet: petNotification)
+        petNotifications.append(Mappers.mapPetDTO(petNotification))
+        petNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, aditionalNotifications: false)
     }
 
     var body: some View {
@@ -79,12 +64,13 @@ struct AddPetScreen: View {
             
             petInfoForm
             
-            Button(action: {
-                UIApplication.shared.dismissKeyboard()
-                Task {
-                    await addPet()
-                }
-            }) {
+            Button(
+                action: {
+                    UIApplication.shared.dismissKeyboard()
+                    Task {
+                        await addPetAction()
+                    }
+                }) {
                 Text("Add Pet")
                     .padding()
                     .font(.headline)
@@ -97,6 +83,7 @@ struct AddPetScreen: View {
             .padding(.horizontal)
             Spacer()
         }
+        .animation(.easeInOut, value: petNotifications)
         .overlay(content: {
             if state == .loading {
                 LoadingView()
@@ -166,21 +153,43 @@ struct AddPetScreen: View {
                         }
                     }
                 }
-                
                 DatePicker("Birthday", selection: $birth, displayedComponents: [.date])
             }
-            
-            Section("Reminders") {
-                Button {
-                    isShowingAddReminder.toggle()
-                } label: {
-                    Image(systemName: "plus")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-
-            }
+            reminderSection
         }
+    }
+    
+    var reminderSection: some View {
+        Section("Reminders") {
+            if !petNotifications.isEmpty {
+                ForEach(petNotifications, id: \.id) { notification in
+                    HStack(spacing: 16) {
+                        Image(systemName: "cross.circle.fill")
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text(notification.title)
+                                .font(.headline)
+                            Text(notification.body)
+                        }
+                        Spacer()
+                        Button {
+                            petNotifications.removeAll(where: { $0.id == notification.id })
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundStyle(.red)
+                        }
+                    }
+                }
+            }
+            
+            Button {
+                isShowingAddReminder.toggle()
+            } label: {
+                Image(systemName: "plus")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .foregroundStyle(Color(.attributesText))
+            }
 
+        }
     }
     
     var animalTypePicker: some View {
@@ -227,10 +236,36 @@ struct AddPetScreen: View {
     }
     
     var addRemainderForm: some View {
-        Form {
-            Text("Sheet para añadir un recordatorio")
+        AddReminderFormView(petNotification: $petNotification) {
+            await addReminder()
         }
-        .presentationDetents([.fraction(0.3)])
+        .presentationDetents([.fraction(0.6)])
+    }
+    
+    func addPetAction() async {
+        state = .loading
+        do {
+            try await viewModel.addPet(
+                pet: .init(
+                    image: "",
+                    name: name,
+                    breed: breed,
+                    type: type.rawValue,
+                    colour: color,
+                    birth: Timestamp(date: birth),
+                    weight: weight,
+                    weightUnit: weightUnit.rawValue,
+                    gender: .male
+                ),
+                reminders: petNotifications,
+                inputImage: inputImage ?? UIImage()
+            )
+            print("Pet added successfully")
+            dismiss.callAsFunction()
+        } catch {
+            state = .error
+            print("Error adding pet: \(error)")
+        }
     }
 }
 

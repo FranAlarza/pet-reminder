@@ -29,7 +29,9 @@ final class NotificationManager: NotificationManagerProtocol {
 extension NotificationManager {
     func scheduleNotificationWithAditionalNotification(notification: PetNotification) async throws {
         try await scheduleNotification(notification: notification)
-        try await scheduleAdditionalNotifications(notification: notification)
+        if notification.aditionalNotifications {
+            try await scheduleAdditionalNotifications(notification: notification)
+        }
     }
     
     private func scheduleNotification(notification: PetNotification) async throws {
@@ -51,13 +53,14 @@ extension NotificationManager {
             trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: false)
         case .annually:
             trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: true)
-        case .none:
+        case .noRepeat:
             trigger = createTrigger(for: notification.date, components: [.year, .month, .day, .hour, .minute], repeats: false)
         }
         
         
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         try await UNUserNotificationCenter.current().add(request)
+        print("Notification scheduled with: \(notification.title), \(notification.body), \(notification.date)")
     }
     
     private func createTrigger(for date: Date, components: Set<Calendar.Component>, repeats: Bool) -> UNCalendarNotificationTrigger {
@@ -67,13 +70,37 @@ extension NotificationManager {
     
     private func scheduleAdditionalNotifications(notification: PetNotification) async throws {
         if let threeDaysBefore = Calendar.current.date(byAdding: .day, value: -3, to: notification.date) {
-            try await scheduleNotification(notification: .init(title: notification.title, body: notification.body, date: threeDaysBefore, repeatInterval: .none))
+            try await scheduleNotification(
+                notification: .init(
+                    title: notification.title,
+                    body: notification.body,
+                    date: threeDaysBefore,
+                    repeatInterval: .noRepeat,
+                    aditionalNotifications: notification.aditionalNotifications
+                )
+            )
         }
         if let twoDaysBefore = Calendar.current.date(byAdding: .day, value: -2, to: notification.date) {
-            try await scheduleNotification(notification: .init(title: notification.title, body: notification.body, date: twoDaysBefore, repeatInterval: .none))
+            try await scheduleNotification(
+                notification: .init(
+                    title: notification.title,
+                    body: notification.body,
+                    date: twoDaysBefore,
+                    repeatInterval: .noRepeat,
+                    aditionalNotifications: notification.aditionalNotifications
+                )
+            )
         }
         if let oneDayBefore = Calendar.current.date(byAdding: .day, value: -1, to: notification.date) {
-            try await scheduleNotification(notification: .init(title: notification.title, body: notification.body, date: oneDayBefore, repeatInterval: .none))
+            try await scheduleNotification(
+                notification: .init(
+                    title: notification.title,
+                    body: notification.body,
+                    date: oneDayBefore,
+                    repeatInterval: .noRepeat,
+                    aditionalNotifications: notification.aditionalNotifications
+                )
+            )
         }
     }
 }

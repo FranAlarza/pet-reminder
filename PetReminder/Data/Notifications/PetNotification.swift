@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct PetNotification: Identifiable {
+struct PetNotification: Identifiable, Equatable {
     let id: String = UUID().uuidString
-    let title: String
-    let body: String
-    let date: Date
-    let repeatInterval: NotificationRepeatInterval
+    var title: String
+    var body: String
+    var date: Date
+    var repeatInterval: NotificationRepeatInterval
+    var aditionalNotifications: Bool
 }
