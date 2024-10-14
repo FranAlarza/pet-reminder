@@ -19,6 +19,7 @@ struct Pet: Hashable, Identifiable {
     let weightUnit: String
     let gender: PetGender
     let createdAt: Date
+    let reminders: [PetNotification]
     
     var age: Int {
         Calendar.current
@@ -52,7 +53,8 @@ extension Pet: Equatable {
             weight: 10,
             weightUnit: "kg",
             gender: .male,
-            createdAt: Date()
+            createdAt: Date(),
+            reminders: []
         ),
         .init(
             id: UUID().uuidString,
@@ -65,7 +67,8 @@ extension Pet: Equatable {
             weight: 10,
             weightUnit: "kg",
             gender: .female,
-            createdAt: Date()
+            createdAt: Date(),
+            reminders: []
         ),
         .init(
             id: UUID().uuidString,
@@ -78,7 +81,8 @@ extension Pet: Equatable {
             weight: 10,
             weightUnit: "kg",
             gender: .male,
-            createdAt: Date()
+            createdAt: Date(),
+            reminders: []
         ),
         .init(
             id: UUID().uuidString,
@@ -91,7 +95,8 @@ extension Pet: Equatable {
             weight: 10,
             weightUnit: "kg",
             gender: .female,
-            createdAt: Date()
+            createdAt: Date(),
+            reminders: []
         ),
         .init(
             id: UUID().uuidString,
@@ -104,7 +109,8 @@ extension Pet: Equatable {
             weight: 10,
             weightUnit: "kg",
             gender: .male,
-            createdAt: Date()
+            createdAt: Date(),
+            reminders: []
         )
     ]
 }

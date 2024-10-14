@@ -113,7 +113,15 @@ struct PetDetailScreen: View {
                     weight: 10,
                     weightUnit: "kg",
                     gender: .male,
-                    createdAt: Date()
+                    createdAt: Date(),
+                    reminders: [.init(
+                        title: "Feed",
+                        body: "",
+                        date: Date(),
+                        repeatInterval: .daily,
+                        notificationType: .medication,
+                        aditionalNotifications: false
+                    )]
                 )
     )
 }

@@ -76,6 +76,7 @@ extension NotificationManager {
                     body: notification.body,
                     date: threeDaysBefore,
                     repeatInterval: .noRepeat,
+                    notificationType: notification.notificationType,
                     aditionalNotifications: notification.aditionalNotifications
                 )
             )
@@ -87,6 +88,7 @@ extension NotificationManager {
                     body: notification.body,
                     date: twoDaysBefore,
                     repeatInterval: .noRepeat,
+                    notificationType: notification.notificationType,
                     aditionalNotifications: notification.aditionalNotifications
                 )
             )
@@ -98,6 +100,7 @@ extension NotificationManager {
                     body: notification.body,
                     date: oneDayBefore,
                     repeatInterval: .noRepeat,
+                    notificationType: notification.notificationType,
                     aditionalNotifications: notification.aditionalNotifications
                 )
             )

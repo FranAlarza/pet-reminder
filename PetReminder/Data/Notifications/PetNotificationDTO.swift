@@ -13,5 +13,6 @@ struct PetNotificationDTO: FirestoreIdentifiable, Equatable {
     let body: String
     let date: Date
     let repeatInterval: NotificationRepeatInterval
+    let notificationType: NotificationType
     let aditionalNotifications: Bool
 }

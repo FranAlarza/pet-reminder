@@ -34,7 +34,7 @@ struct AddPetScreen: View {
     @State var weight: Double = 5
     @State var weightUnit: WeightUnit = .kg
     @State var birth: Date = Date()
-    @State var petNotification: PetNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, aditionalNotifications: false)
+    @State var petNotification: PetNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
     @State var petNotifications: [PetNotificationDTO] = []
     
     // Sheets Controls
@@ -44,8 +44,9 @@ struct AddPetScreen: View {
     
     func addReminder() async {
         await viewModel.addNotification(pet: petNotification)
-        petNotifications.append(Mappers.mapPetDTO(petNotification))
-        petNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, aditionalNotifications: false)
+        let noti = Mappers.mapPetDTO(petNotification)
+        petNotifications.append(noti)
+        petNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
     }
 
     var body: some View {

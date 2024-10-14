@@ -8,15 +8,6 @@
 import Foundation
 import SwiftUI
 
-/**
- struct PetNotification: Identifiable {
-     let id: String = UUID().uuidString
-     let title: String
-     let body: String
-     let date: Date
-     let repeatInterval: NotificationRepeatInterval
- }
- */
 struct AddReminderFormView: View {
     
     @Binding var petNotification: PetNotification
@@ -27,9 +18,26 @@ struct AddReminderFormView: View {
     var body: some View {
         VStack {
             Form {
-                Section("Add Reminder") {
+                Section("Choose Type") {
+                    HStack(alignment: .center, spacing: 16){
+                        ForEach(NotificationType.allCases) { type in
+                            Image(systemName: type.iconKey)
+                                .padding()
+                                .foregroundStyle(petNotification.notificationType == type ? .attributesText : .secondary)
+                                .onTapGesture {
+                                    print("Selected \(type)")
+                                    petNotification.notificationType = type
+                                }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                }
+                
+                Section("Reminder Info") {
                     TextField("Title", text: $petNotification.title)
+                        .autocorrectionDisabled()
                     TextField("Description", text: $petNotification.body)
+                        .autocorrectionDisabled()
                 }
                 
                 Section("Frecuency") {
@@ -39,7 +47,7 @@ struct AddReminderFormView: View {
                         }
                     }
                     DatePicker("Date", selection: $petNotification.date)
-                    Toggle("Notify me the days before", isOn: $petNotification.aditionalNotifications)
+                    Toggle("Notify me before", isOn: $petNotification.aditionalNotifications)
                 }
             }
             
@@ -71,6 +79,7 @@ struct AddReminderFormView: View {
                 body: "DescriptionTest",
                 date: Date(),
                 repeatInterval: .daily,
+                notificationType: .medication,
                 aditionalNotifications: true
             )
         ), action: {}

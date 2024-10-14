@@ -55,7 +55,8 @@ struct PetRow: View {
             weight: 10,
             weightUnit: "kg",
             gender: .male,
-            createdAt: Date()
+            createdAt: Date(),
+            reminders: []
         )
     )
 }
