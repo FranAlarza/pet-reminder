@@ -65,11 +65,20 @@ struct PetDetailScreen: View {
                     attributeCard(title: "Age", value: "\(pet.age)")
                     attributeCard(title: "Gender", value: "\(pet.gender.rawValue.capitalized)")
                     attributeCard(title: "Colour", value: "\(pet.colour)")
-                    attributeCard(title: "Lenght", value: "\(pet.weight) \(pet.weightUnit)")
+                    attributeCard(title: "Weight", value: "\(pet.weight) \(pet.weightUnit)")
                 }
                 Divider()
                     .background(.attributesText)
                     .padding(.horizontal, 16)
+                
+                ScrollView {
+                    VStack(spacing: 12) {
+                        ForEach(pet.reminders) { reminder in
+                            ReminderRow(petNotification: reminder)
+                        }
+                    }
+                    .padding()
+                }
                 Spacer()
             }
             .padding(.top, 64)
@@ -116,12 +125,28 @@ struct PetDetailScreen: View {
                     createdAt: Date(),
                     reminders: [.init(
                         title: "Feed",
-                        body: "",
+                        body: "Test reminder",
                         date: Date(),
                         repeatInterval: .daily,
                         notificationType: .medication,
                         aditionalNotifications: false
-                    )]
+                    ),
+                                .init(
+                                    title: "Feed",
+                                    body: "Test reminder",
+                                    date: Date(),
+                                    repeatInterval: .daily,
+                                    notificationType: .medication,
+                                    aditionalNotifications: false
+                                ),
+                                .init(
+                                    title: "Feed",
+                                    body: "Test reminder",
+                                    date: Date(),
+                                    repeatInterval: .daily,
+                                    notificationType: .medication,
+                                    aditionalNotifications: false
+                                )]
                 )
     )
 }

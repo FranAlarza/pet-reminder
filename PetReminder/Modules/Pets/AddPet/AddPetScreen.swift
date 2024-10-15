@@ -165,7 +165,7 @@ struct AddPetScreen: View {
             if !petNotifications.isEmpty {
                 ForEach(petNotifications, id: \.id) { notification in
                     HStack(spacing: 16) {
-                        Image(systemName: "cross.circle.fill")
+                        Image(systemName: notification.notificationType.iconKey)
                         VStack(alignment: .leading, spacing: 12) {
                             Text(notification.title)
                                 .font(.headline)

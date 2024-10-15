@@ -21,7 +21,7 @@ struct PetReminderApp: App {
                 .task {
                     do {
                         await notificationManager.requestAuthorization()
-                        try await Auth.auth().signInAnonymously()
+                        //try await Auth.auth().signInAnonymously()
                         print("[PetReminderApp] - Signed in anonymously")
                         await authService.login()
                     } catch {
