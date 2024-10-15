@@ -14,7 +14,7 @@ struct PetRow: View {
             Image(uiImage: UIImage(data: pet.image) ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 150, height: 150)
+                .frame(width: 150)
                 .clipShape(RoundedRectangle(cornerSize: CGSize(width: 16, height: 16)))
             petAttributes
         }
@@ -26,19 +26,34 @@ struct PetRow: View {
     }
     
     var petAttributes: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 12) {
             Text("\(pet.name), \(pet.age)")
-                .font(.system(.title))
-            Text(pet.breed)
-                .font(.system(.subheadline, weight: .light))
-            Text(pet.type.rawValue)
-                .font(.system(.subheadline, weight: .light))
-            Text(pet.colour)
-                .font(.system(.subheadline, weight: .light))
+                .font(.system(size: 18, weight: .bold))
+            generateAttributeLine(name: "Breed:", attribute: pet.breed)
+            generateAttributeLine(name: "Type:", attribute: pet.type.rawValue)
+            generateAttributeLine(name: "Color:", attribute: pet.colour)
+
+            HStack {
+                Image(systemName: "bell.fill")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .foregroundStyle(.attributesText)
+                Text("\(pet.reminders.count)")
+                    .foregroundStyle(.gray)
+            }
         }
         .foregroundStyle(.primary)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
+    }
+    
+    func generateAttributeLine(name: String, attribute: String) -> some View {
+        HStack {
+            Text(name)
+                .bold()
+            Text(attribute)
+        }
+        .font(.system(.subheadline, weight: .light))
     }
 }
 

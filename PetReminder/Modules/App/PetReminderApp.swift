@@ -19,14 +19,8 @@ struct PetReminderApp: App {
         WindowGroup {
             MainTabBar()
                 .task {
-                    do {
-                        await notificationManager.requestAuthorization()
-                        //try await Auth.auth().signInAnonymously()
-                        print("[PetReminderApp] - Signed in anonymously")
-                        await authService.login()
-                    } catch {
-                        print("[PetReminderApp] - Error signing in anonymously: \(error)")
-                    }
+                    await notificationManager.requestAuthorization()
+                    await authService.login()
                 }
         }
     }

@@ -31,7 +31,7 @@ struct ReminderRow: View {
                 }
 
                 Label {
-                    Text(petNotification.repeatInterval.rawValue.capitalized)
+                    Text(LocalizedStringResource(stringLiteral: petNotification.repeatInterval.rawValue))
                 } icon: {
                     Image(systemName: "arrow.counterclockwise")
                 }

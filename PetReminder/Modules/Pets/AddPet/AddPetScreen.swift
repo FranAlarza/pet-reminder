@@ -31,9 +31,12 @@ struct AddPetScreen: View {
     @State var breed: String = "Podenco"
     @State var type: AnimalType = .dog
     @State var color: String = "Canela"
-    @State var weight: Double = 5
+    @State var weight: Double = 9.3
     @State var weightUnit: WeightUnit = .kg
     @State var birth: Date = Date()
+    
+    // Notifications
+    @State var selectedNotification: PetNotification?
     @State var petNotification: PetNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
     @State var petNotifications: [PetNotificationDTO] = []
     
@@ -43,7 +46,6 @@ struct AddPetScreen: View {
     @State var isShowingAddReminder: Bool = false
     
     func addReminder() async {
-        await viewModel.addNotification(pet: petNotification)
         let noti = Mappers.mapPetDTO(petNotification)
         petNotifications.append(noti)
         petNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
@@ -150,7 +152,7 @@ struct AddPetScreen: View {
                         .submitLabel(.next)
                     Picker("Unit", selection: $weightUnit) {
                         ForEach(WeightUnit.allCases, id: \.self) { unit in
-                            Text(unit.rawValue.capitalized)
+                            Text(LocalizedStringResource(stringLiteral: unit.rawValue))
                         }
                     }
                 }
@@ -164,7 +166,7 @@ struct AddPetScreen: View {
         Section("Reminders") {
             if !petNotifications.isEmpty {
                 ForEach(petNotifications, id: \.id) { notification in
-                    HStack(spacing: 16) {
+                    HStack(spacing: 24) {
                         Image(systemName: notification.notificationType.iconKey)
                         VStack(alignment: .leading, spacing: 12) {
                             Text(notification.title)
@@ -172,12 +174,17 @@ struct AddPetScreen: View {
                             Text(notification.body)
                         }
                         Spacer()
-                        Button {
-                            petNotifications.removeAll(where: { $0.id == notification.id })
-                        } label: {
-                            Image(systemName: "trash")
-                                .foregroundStyle(.red)
-                        }
+                        
+                        Image(systemName: "trash")
+                            .foregroundStyle(.red)
+                            .onTapGesture {
+                                petNotifications.removeAll(where: { $0.id == notification.id })
+                            }
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        petNotification = Mappers.mapPetNotification(notification)
+                        isShowingAddReminder.toggle()
                     }
                 }
             }
@@ -196,7 +203,7 @@ struct AddPetScreen: View {
     var animalTypePicker: some View {
         Picker("Pet Type", selection: $type) {
             ForEach(AnimalType.allCases, id: \.self) { type in
-                Text(type.rawValue.capitalized)
+                Text(LocalizedStringResource(stringLiteral: type.rawValue))
             }
         }
     }
@@ -271,5 +278,15 @@ struct AddPetScreen: View {
 }
 
 #Preview {
-    AddPetScreen()
+    AddPetScreen(
+        petNotifications: [.init(
+            id: UUID().uuidString,
+            title: "Test",
+            body: "Test",
+            date: Date(),
+            repeatInterval: .daily,
+            notificationType: .playtime,
+            aditionalNotifications: false
+        )]
+    )
 }

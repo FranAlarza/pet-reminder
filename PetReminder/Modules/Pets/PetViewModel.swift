@@ -43,6 +43,23 @@ final class PetViewModel: ObservableObject {
         }
     }
     
+    func addPet(pet: PetDTO, reminders: [PetNotificationDTO], inputImage: UIImage) async throws {
+        let url = try await FirestoreService.uploadImage(inputImage) ?? ""
+        let dto: PetDTO = .init(
+            image: url,
+            name: pet.name,
+            breed: pet.breed,
+            type: pet.type,
+            colour: pet.colour,
+            birth: pet.birth,
+            weight: pet.weight,
+            weightUnit: pet.weightUnit,
+            gender: pet.gender
+        )
+        try await FirestoreService.request(PetsEndpoints.postPet(dto: dto))
+        try await addReminders(reminders: reminders, petId: dto.id)
+    }
+    
     func suscribeToPets() {
         let subscription = FirestoreService.subscribe(PetsEndpoints.getPets) { [weak self] (result: Result<[PetDTO], FirestoreServiceError>) in
             self?.petState = .loading
@@ -62,6 +79,7 @@ final class PetViewModel: ObservableObject {
         }
     }
     
+    
     func getRemainders(petId: String) async -> [PetNotificationDTO] {
         do {
             let reminders: [PetNotificationDTO] = try await FirestoreService.request(NotificationsEndpoints.getNotifications(petId))
@@ -73,21 +91,13 @@ final class PetViewModel: ObservableObject {
         }
     }
     
-    func addPet(pet: PetDTO, reminders: [PetNotificationDTO], inputImage: UIImage) async throws {
-        let url = try await FirestoreService.uploadImage(inputImage) ?? ""
-        let dto: PetDTO = .init(
-            image: url,
-            name: pet.name,
-            breed: pet.breed,
-            type: pet.type,
-            colour: pet.colour,
-            birth: pet.birth,
-            weight: pet.weight,
-            weightUnit: pet.weightUnit,
-            gender: pet.gender
-        )
-        try await FirestoreService.request(PetsEndpoints.postPet(dto: dto))
-        try await addReminders(reminders: reminders, petId: dto.id)
+    func addNotification(pet: PetNotification) async {
+        do {
+            try await notificationManager.scheduleNotificationWithAditionalNotification(notification: pet)
+            print("Notification added successfully")
+        } catch {
+            print("error: \(error)")
+        }
     }
     
     func addReminders(reminders: [PetNotificationDTO], petId: String) async throws {
@@ -102,12 +112,8 @@ final class PetViewModel: ObservableObject {
         
     }
     
-    func addNotification(pet: PetNotification) async {
-        do {
-            try await notificationManager.scheduleNotificationWithAditionalNotification(notification: pet)
-            print("Notification added successfully")
-        } catch {
-            print("error: \(error)")
-        }
+    func deleteNotification(notificationId: String) {
+        notificationManager.removeNotification(with: notificationId)
+        print("Notification deleted successfully")
     }
 }

@@ -8,6 +8,16 @@
 import SwiftUI
 
 struct MainTabBar: View {
+    
+    init() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground() 
+        appearance.backgroundColor = UIColor.systemGray6 
+        
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
         TabView {
             NavigationStack {
@@ -30,7 +40,6 @@ struct MainTabBar: View {
                 }
             }
         }
-        .toolbarColorScheme(.light, for: .tabBar)
     }
 }
 

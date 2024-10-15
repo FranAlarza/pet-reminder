@@ -43,7 +43,7 @@ struct AddReminderFormView: View {
                 Section("Frecuency") {
                     Picker("Frecuency", selection: $petNotification.repeatInterval) {
                         ForEach(NotificationRepeatInterval.allCases) { repeatInterval in
-                            Text(repeatInterval.rawValue).tag(repeatInterval)
+                            Text(LocalizedStringResource(stringLiteral: repeatInterval.rawValue)).tag(repeatInterval)
                         }
                     }
                     DatePicker("Date", selection: $petNotification.date)

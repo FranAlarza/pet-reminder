@@ -17,7 +17,7 @@ struct PetDetailScreen: View {
                         .resizable()
                         .scaledToFill()
                         .frame(maxWidth: .infinity)
-                        .frame(height: 200)
+                        .frame(height: proxy.size.height * 0.4)
                     Spacer()
                 }
                 infoCard
@@ -48,10 +48,10 @@ struct PetDetailScreen: View {
                 .font(.subheadline)
                 .foregroundStyle(.gray)
         }
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(32)
         .background {
-            RoundedRectangle(cornerSize: CGSize(width: 48, height: 48))
+            RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
                 .fill(Color(.systemBackground))
                 .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
         }
@@ -60,7 +60,7 @@ struct PetDetailScreen: View {
     var infoSheet: some View {
         VStack {
             Spacer()
-            VStack(spacing: 32) {
+            VStack(spacing: 0) {
                 HStack(spacing: 12) {
                     attributeCard(title: "Age", value: "\(pet.age)")
                     attributeCard(title: "Gender", value: "\(pet.gender.rawValue.capitalized)")
@@ -69,7 +69,7 @@ struct PetDetailScreen: View {
                 }
                 Divider()
                     .background(.attributesText)
-                    .padding(.horizontal, 16)
+                    .padding()
                 
                 ScrollView {
                     VStack(spacing: 12) {
@@ -77,18 +77,17 @@ struct PetDetailScreen: View {
                             ReminderRow(petNotification: reminder)
                         }
                     }
-                    .padding()
+                    .padding(.horizontal)
                 }
                 Spacer()
             }
-            .padding(.top, 64)
+            .padding(.top, 48)
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerSize: CGSize(width: 36, height: 36))
                     .fill(Color(.detailSheet))
             }
         }
-        .ignoresSafeArea()
     }
     
     func attributeCard(title: String, value: String) -> some View {

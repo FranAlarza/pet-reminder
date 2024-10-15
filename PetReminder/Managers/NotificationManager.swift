@@ -11,6 +11,7 @@ import UserNotifications
 protocol NotificationManagerProtocol {
     func requestAuthorization() async
     func scheduleNotificationWithAditionalNotification(notification: PetNotification) async throws
+    func removeNotification(with identifier: String)
 }
 
 final class NotificationManager: NotificationManagerProtocol {
@@ -22,17 +23,23 @@ final class NotificationManager: NotificationManagerProtocol {
         } catch {
             print("Error requesting authorization: \(error)")
         }
-
+        
     }
-}
-
-extension NotificationManager {
     func scheduleNotificationWithAditionalNotification(notification: PetNotification) async throws {
         try await scheduleNotification(notification: notification)
         if notification.aditionalNotifications {
             try await scheduleAdditionalNotifications(notification: notification)
         }
     }
+    
+    func removeNotification(with identifier: String) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
+    }
+}
+
+extension NotificationManager {
+
     
     private func scheduleNotification(notification: PetNotification) async throws {
         let content = UNMutableNotificationContent()
