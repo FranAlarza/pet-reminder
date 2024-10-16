@@ -12,15 +12,18 @@ import FirebaseAuth
 enum PetsEndpoints: FirestoreEndpoint {
     case getPets
     case postPet(dto: PetDTO)
+    case deletePet(id: String)
     
     var path: FirestoreReference {
+        guard let uid = Global.userId else { return firestore.collection("pets") }
+        
         switch self {
         case .getPets:
-            guard let uid = Global.userId else { return firestore.collection("pets") }
             return firestore.collection("users/\(uid)/pets")
         case .postPet(let dto):
-            guard let uid = Global.userId else { return firestore.collection("pets") }
             return firestore.collection("users/\(uid)/pets").document(dto.id)
+        case .deletePet(let id):
+            return firestore.collection("users/\(uid)/pets").document(id)
         }
     }
     
@@ -30,6 +33,8 @@ enum PetsEndpoints: FirestoreEndpoint {
             return .get
         case .postPet(let dto):
             return .post(dto)
+        case .deletePet:
+            return .delete
         }
     }
 }

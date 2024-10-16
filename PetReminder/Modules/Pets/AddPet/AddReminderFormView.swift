@@ -75,6 +75,7 @@ struct AddReminderFormView: View {
     AddReminderFormView(
         petNotification: .constant(
             .init(
+                id: "",
                 title: "NotiTest",
                 body: "DescriptionTest",
                 date: Date(),

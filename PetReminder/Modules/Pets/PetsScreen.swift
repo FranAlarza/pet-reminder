@@ -37,9 +37,13 @@ struct PetsScreen: View {
                 List {
                     ForEach(pets) { pet in
                         PetRow(pet: pet)
-                            .swipeActions {
-                                Button(action: {}) {
-                                    Image(systemName: "trash")
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    Task {
+                                        await petViewModel.deletePet(pet: pet)
+                                    }
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
                                 }
                             }
                             .overlay {

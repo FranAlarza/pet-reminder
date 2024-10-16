@@ -19,24 +19,23 @@ final class AuthService: AuthServiceProtocol {
         do {
             let userId = Auth.auth().currentUser?.uid ?? ""
             let userExist = try await Firestore.firestore().collection("users").whereField("id", isEqualTo: userId).getDocuments()
-            if userExist.isEmpty {
-                await register(userId: userId)
-            } else {
-                print("User already registered")
+            if !userExist.isEmpty {
+                debugPrint("User already registered")
             }
         } catch {
-            print("Error logging in user: \(error)")
+            await register()
         }
     }
     
-    private func register(userId: String) async {
+    private func register() async {
         do {
             let data = try await Auth.auth().signInAnonymously()
             let dto = RegisterDto(id: data.user.uid)
             let endpoint = AuthEndpoints.register(dto)
             try await FirestoreService.request(endpoint)
+            debugPrint("User created")
         } catch {
-            print("Error registering user: \(error)")
+            debugPrint("Error registering user: \(error)")
         }
     }
 }

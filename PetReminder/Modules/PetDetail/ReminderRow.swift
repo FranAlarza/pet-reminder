@@ -53,6 +53,7 @@ struct ReminderRow: View {
 #Preview {
     ReminderRow(
         petNotification: .init(
+            id: "",
             title: "Vacuna",
             body: "Toca Vacuna!",
             date: Date(),

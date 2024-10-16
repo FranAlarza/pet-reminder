@@ -79,6 +79,16 @@ final class PetViewModel: ObservableObject {
         }
     }
     
+    func deletePet(pet: Pet) async {
+        do {
+            let reminders = pet.reminders.map { Mappers.mapPetDTO($0) }
+            try await deleteReminders(reminders: reminders, petId: pet.id)
+            try await FirestoreService.request(PetsEndpoints.deletePet(id: pet.id))
+            print("Successfully removed pet")
+        } catch {
+            print("Error removing pet: \(error)")
+        }
+    }
     
     func getRemainders(petId: String) async -> [PetNotificationDTO] {
         do {
@@ -91,12 +101,15 @@ final class PetViewModel: ObservableObject {
         }
     }
     
-    func addNotification(pet: PetNotification) async {
-        do {
-            try await notificationManager.scheduleNotificationWithAditionalNotification(notification: pet)
-            print("Notification added successfully")
-        } catch {
-            print("error: \(error)")
+    func addNotification(pets: [PetNotificationDTO]) async {
+        for pet in pets {
+            do {
+                let mappedPet = Mappers.mapPetNotification(pet)
+                try await notificationManager.scheduleNotificationWithAditionalNotification(notification: mappedPet)
+                print("Notification added successfully")
+            } catch {
+                print("error: \(error)")
+            }
         }
     }
     
@@ -110,6 +123,16 @@ final class PetViewModel: ObservableObject {
             try await group.waitForAll()
         }
         
+    }
+    
+    func deleteReminders(reminders: [PetNotificationDTO], petId: String) async throws {
+        await withThrowingTaskGroup(of: Void.self) { group in
+            for reminder in reminders {
+                group.addTask {
+                    try await FirestoreService.request(NotificationsEndpoints.deleteReminders(petId, reminder.id))
+                }
+            }
+        }
     }
     
     func deleteNotification(notificationId: String) {

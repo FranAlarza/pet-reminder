@@ -8,7 +8,7 @@
 import Foundation
 
 struct PetNotification: Identifiable, Equatable, Hashable {
-    let id: String = UUID().uuidString
+    let id: String
     var title: String
     var body: String
     var date: Date

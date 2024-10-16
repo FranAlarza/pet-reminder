@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseCore
 
-enum AddPetScreeState {
+enum AddPetScreenState {
     case error
     case success
     case loading
@@ -19,10 +19,15 @@ enum WeightUnit: String, CaseIterable {
     case kg
 }
 
+enum AddReminderSheetState {
+    case add
+    case edit
+}
+
 struct AddPetScreen: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: PetViewModel
-    @State var state: AddPetScreeState?
+    @State var state: AddPetScreenState?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     // Form Data
@@ -34,21 +39,30 @@ struct AddPetScreen: View {
     @State var weight: Double = 9.3
     @State var weightUnit: WeightUnit = .kg
     @State var birth: Date = Date()
+    @State var petNotifications: [PetNotificationDTO] = []
+
     
     // Notifications
     @State var selectedNotification: PetNotification?
-    @State var petNotification: PetNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
-    @State var petNotifications: [PetNotificationDTO] = []
+    @State var petNotification: PetNotification = .init(id: UUID().uuidString, title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
     
     // Sheets Controls
     @State var isTakePhotoSheetShowed: Bool = false
     @State var isShowingImagePicker: Bool = false
     @State var isShowingAddReminder: Bool = false
+    @State var addReminderSheetState: AddReminderSheetState = .add
     
     func addReminder() async {
         let noti = Mappers.mapPetDTO(petNotification)
         petNotifications.append(noti)
-        petNotification = .init(title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
+        petNotification = .init(id: UUID().uuidString, title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
+        print("Reminder added \(noti.id)")
+    }
+    
+    func editReminder() async {
+        petNotifications.removeAll(where: { $0.id == petNotification.id })
+        await addReminder()
+        print("Reminder edited")
     }
 
     var body: some View {
@@ -103,6 +117,7 @@ struct AddPetScreen: View {
         }
         .sheet(isPresented: $isShowingAddReminder) {
             addRemainderForm
+                .presentationDetents([.fraction(0.6)])
         }
     }
     
@@ -184,12 +199,14 @@ struct AddPetScreen: View {
                     .contentShape(Rectangle())
                     .onTapGesture {
                         petNotification = Mappers.mapPetNotification(notification)
+                        addReminderSheetState = .edit
                         isShowingAddReminder.toggle()
                     }
                 }
             }
             
             Button {
+                addReminderSheetState = .add
                 isShowingAddReminder.toggle()
             } label: {
                 Image(systemName: "plus")
@@ -245,9 +262,14 @@ struct AddPetScreen: View {
     
     var addRemainderForm: some View {
         AddReminderFormView(petNotification: $petNotification) {
-            await addReminder()
+            switch addReminderSheetState {
+            case .add:
+                await addReminder()
+            case .edit:
+                await editReminder()
+                
+            }
         }
-        .presentationDetents([.fraction(0.6)])
     }
     
     func addPetAction() async {
@@ -268,6 +290,7 @@ struct AddPetScreen: View {
                 reminders: petNotifications,
                 inputImage: inputImage ?? UIImage()
             )
+            await viewModel.addNotification(pets: petNotifications)
             print("Pet added successfully")
             dismiss.callAsFunction()
         } catch {

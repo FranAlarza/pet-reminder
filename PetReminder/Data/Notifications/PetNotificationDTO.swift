@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PetNotificationDTO: FirestoreIdentifiable, Equatable {
+struct PetNotificationDTO: FirestoreIdentifiable, Equatable, Hashable {
     var id: String
     let title: String
     let body: String

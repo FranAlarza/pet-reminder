@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PetDetailScreen: View {
     let pet: Pet
+    @State var isAddPetSheetOpen: Bool = false
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .bottom) {
@@ -27,8 +28,17 @@ struct PetDetailScreen: View {
                 infoSheet
                     .frame(height: proxy.size.height * 0.55)
                     .zIndex(100)
-
             }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "pencil.circle.fill")
+                        .foregroundStyle(.attributesText)
+                        .onTapGesture {
+                            isAddPetSheetOpen.toggle()
+                        }
+                }
+            }
+            .sheet(isPresented: $isAddPetSheetOpen, content: AddPetScreen.init)
         }
     }
     
@@ -123,7 +133,7 @@ struct PetDetailScreen: View {
                     gender: .male,
                     createdAt: Date(),
                     reminders: [.init(
-                        title: "Feed",
+                        id: "", title: "Feed",
                         body: "Test reminder",
                         date: Date(),
                         repeatInterval: .daily,
@@ -131,7 +141,7 @@ struct PetDetailScreen: View {
                         aditionalNotifications: false
                     ),
                                 .init(
-                                    title: "Feed",
+                                    id: "", title: "Feed",
                                     body: "Test reminder",
                                     date: Date(),
                                     repeatInterval: .daily,
@@ -139,7 +149,7 @@ struct PetDetailScreen: View {
                                     aditionalNotifications: false
                                 ),
                                 .init(
-                                    title: "Feed",
+                                    id: "", title: "Feed",
                                     body: "Test reminder",
                                     date: Date(),
                                     repeatInterval: .daily,

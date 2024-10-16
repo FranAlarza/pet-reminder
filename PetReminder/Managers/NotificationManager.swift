@@ -79,6 +79,7 @@ extension NotificationManager {
         if let threeDaysBefore = Calendar.current.date(byAdding: .day, value: -3, to: notification.date) {
             try await scheduleNotification(
                 notification: .init(
+                    id: notification.id,
                     title: notification.title,
                     body: notification.body,
                     date: threeDaysBefore,
@@ -91,6 +92,7 @@ extension NotificationManager {
         if let twoDaysBefore = Calendar.current.date(byAdding: .day, value: -2, to: notification.date) {
             try await scheduleNotification(
                 notification: .init(
+                    id: notification.id,
                     title: notification.title,
                     body: notification.body,
                     date: twoDaysBefore,
@@ -103,6 +105,7 @@ extension NotificationManager {
         if let oneDayBefore = Calendar.current.date(byAdding: .day, value: -1, to: notification.date) {
             try await scheduleNotification(
                 notification: .init(
+                    id: notification.id,
                     title: notification.title,
                     body: notification.body,
                     date: oneDayBefore,

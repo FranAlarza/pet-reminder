@@ -23,6 +23,7 @@ struct Mappers {
     
     static func mapPetNotification(_ from: PetNotificationDTO) -> PetNotification {
         return .init(
+            id: from.id,
             title: from.title,
             body: from.body,
             date: from.date,

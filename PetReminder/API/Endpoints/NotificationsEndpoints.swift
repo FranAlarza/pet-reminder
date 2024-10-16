@@ -10,6 +10,7 @@ import Foundation
 enum NotificationsEndpoints: FirestoreEndpoint {
     case getNotifications(String)
     case postNotifications(PetNotificationDTO, String)
+    case deleteReminders(String, String)
     
     var path: FirestoreReference {
         switch self {
@@ -19,6 +20,9 @@ enum NotificationsEndpoints: FirestoreEndpoint {
         case .postNotifications(let dto, let petId):
             guard let uid = Global.userId else { return firestore.collection("pets") }
             return firestore.collection("users/\(uid)/pets/\(petId)/reminders").document(dto.id)
+        case .deleteReminders(let petId, let id):
+            guard let uid = Global.userId else { return firestore.collection("pets") }
+            return firestore.collection("users/\(uid)/pets/\(petId)/reminders").document(id)
         }
     }
     
@@ -28,6 +32,8 @@ enum NotificationsEndpoints: FirestoreEndpoint {
             return .get
         case .postNotifications(let dto, _):
             return .post(dto)
+        case .deleteReminders:
+            return .delete
         }
     }
 }
