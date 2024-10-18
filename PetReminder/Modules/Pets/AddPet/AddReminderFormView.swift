@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AddReminderFormView: View {
     
-    @Binding var petNotification: PetNotification
+    @Binding var petNotification: Notification
     let action: () async -> Void
 
     @Environment(\.dismiss) var dismiss

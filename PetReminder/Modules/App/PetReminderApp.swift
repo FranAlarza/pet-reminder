@@ -13,7 +13,7 @@ import FirebaseAuth
 struct PetReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     private let authService: AuthServiceProtocol = AuthService()
-    private let notificationManager: NotificationManagerProtocol = NotificationManager()
+    private let notificationManager: NotificationRepositoryProtocol = NotificationRepository()
     
     var body: some Scene {
         WindowGroup {

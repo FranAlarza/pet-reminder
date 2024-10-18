@@ -1,5 +1,5 @@
 //
-//  AddPetScreen.swift
+//  AddAnimalScreen.swift
 //  PetReminder
 //
 //  Created by Fran Alarza on 10/10/24.
@@ -24,27 +24,24 @@ enum AddReminderSheetState {
     case edit
 }
 
-struct AddPetScreen: View {
+enum AddAnimalState {
+    case add
+    case edit
+}
+
+struct AddAnimalScreen: View {
+    let mode: AddAnimalState
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel: PetViewModel
+    @EnvironmentObject var viewModel: AnimalViewModel
     @State var state: AddPetScreenState?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     // Form Data
+    @State var animal = Animal()
     @State var inputImage: UIImage?
-    @State var name: String = "Daisy"
-    @State var breed: String = "Podenco"
-    @State var type: AnimalType = .dog
-    @State var color: String = "Canela"
-    @State var weight: Double = 9.3
-    @State var weightUnit: WeightUnit = .kg
-    @State var birth: Date = Date()
-    @State var petNotifications: [PetNotificationDTO] = []
 
-    
     // Notifications
-    @State var selectedNotification: PetNotification?
-    @State var petNotification: PetNotification = .init(id: UUID().uuidString, title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
+    @State var animalNotification: Notification = .init()
     
     // Sheets Controls
     @State var isTakePhotoSheetShowed: Bool = false
@@ -52,18 +49,7 @@ struct AddPetScreen: View {
     @State var isShowingAddReminder: Bool = false
     @State var addReminderSheetState: AddReminderSheetState = .add
     
-    func addReminder() async {
-        let noti = Mappers.mapPetDTO(petNotification)
-        petNotifications.append(noti)
-        petNotification = .init(id: UUID().uuidString, title: "", body: "", date: Date(), repeatInterval: .noRepeat, notificationType: .other, aditionalNotifications: false)
-        print("Reminder added \(noti.id)")
-    }
-    
-    func editReminder() async {
-        petNotifications.removeAll(where: { $0.id == petNotification.id })
-        await addReminder()
-        print("Reminder edited")
-    }
+    let action: ((Animal) -> Void)?
 
     var body: some View {
         VStack {
@@ -85,10 +71,27 @@ struct AddPetScreen: View {
                 action: {
                     UIApplication.shared.dismissKeyboard()
                     Task {
-                        await addPetAction()
+                        state = .loading
+                        switch mode {
+                            case .add:
+                            do {
+                                try await viewModel.addAnimalWithReminders(animal: animal)
+                                dismiss.callAsFunction()
+                            } catch {
+                                state = .error
+                            }
+                        case .edit:
+                            do {
+                                try await viewModel.editAnimalWithReminders(animal: animal)
+                                dismiss.callAsFunction()
+                                action?(animal)
+                            } catch {
+                                state = .error
+                            }
+                        }
                     }
                 }) {
-                Text("Add Pet")
+                    Text(mode == .add ? "Add Pet" : "Update Pet")
                     .padding()
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -100,7 +103,12 @@ struct AddPetScreen: View {
             .padding(.horizontal)
             Spacer()
         }
-        .animation(.easeInOut, value: petNotifications)
+        .onChange(of: inputImage, perform: { newImage in
+            if let newImage {
+                animal.image = newImage.convertImageToBase64String() ?? ""
+            }
+        })
+        .animation(.easeInOut, value: animal.notifications)
         .overlay(content: {
             if state == .loading {
                 LoadingView()
@@ -155,23 +163,23 @@ struct AddPetScreen: View {
         Form {
             Section("Pet Information") {
                 animalTypePicker
-                TextField("Name", text: $name)
+                TextField("Name", text: $animal.name)
                     .submitLabel(.next)
-                TextField("Breed", text: $breed)
+                TextField("Breed", text: $animal.breed)
                     .submitLabel(.next)
-                TextField("Color", text: $color)
+                TextField("Color", text: $animal.colour)
                     .submitLabel(.next)
                 HStack {
-                    TextField("Weight", value: $weight, format: .number)
+                    TextField("Weight", value: $animal.weight, format: .number)
                         .keyboardType(.numberPad)
                         .submitLabel(.next)
-                    Picker("Unit", selection: $weightUnit) {
+                    Picker("Unit", selection: $animal.weightUnit) {
                         ForEach(WeightUnit.allCases, id: \.self) { unit in
-                            Text(LocalizedStringResource(stringLiteral: unit.rawValue))
+                            Text(LocalizedStringResource(stringLiteral: unit.rawValue)).tag(unit.rawValue)
                         }
                     }
                 }
-                DatePicker("Birthday", selection: $birth, displayedComponents: [.date])
+                DatePicker("Birthday", selection: $animal.birth, displayedComponents: [.date])
             }
             reminderSection
         }
@@ -179,8 +187,8 @@ struct AddPetScreen: View {
     
     var reminderSection: some View {
         Section("Reminders") {
-            if !petNotifications.isEmpty {
-                ForEach(petNotifications, id: \.id) { notification in
+            if !animal.notifications.isEmpty {
+                ForEach(animal.notifications, id: \.id) { notification in
                     HStack(spacing: 24) {
                         Image(systemName: notification.notificationType.iconKey)
                         VStack(alignment: .leading, spacing: 12) {
@@ -193,12 +201,12 @@ struct AddPetScreen: View {
                         Image(systemName: "trash")
                             .foregroundStyle(.red)
                             .onTapGesture {
-                                petNotifications.removeAll(where: { $0.id == notification.id })
+                                animal.notifications.removeAll(where: { $0.id == notification.id })
                             }
                     }
                     .contentShape(Rectangle())
                     .onTapGesture {
-                        petNotification = Mappers.mapPetNotification(notification)
+                        animalNotification = notification
                         addReminderSheetState = .edit
                         isShowingAddReminder.toggle()
                     }
@@ -218,9 +226,9 @@ struct AddPetScreen: View {
     }
     
     var animalTypePicker: some View {
-        Picker("Pet Type", selection: $type) {
+        Picker("Pet Type", selection: $animal.type) {
             ForEach(AnimalType.allCases, id: \.self) { type in
-                Text(LocalizedStringResource(stringLiteral: type.rawValue))
+                Text(LocalizedStringResource(stringLiteral: type.rawValue)).tag(type)
             }
         }
     }
@@ -261,55 +269,19 @@ struct AddPetScreen: View {
     }
     
     var addRemainderForm: some View {
-        AddReminderFormView(petNotification: $petNotification) {
+        AddReminderFormView(petNotification: $animalNotification) {
             switch addReminderSheetState {
             case .add:
-                await addReminder()
+                animal.notifications.append(animalNotification)
             case .edit:
-                await editReminder()
-                
+                animal.notifications.removeAll(where: { $0.id == animalNotification.id })
+                animal.notifications.append(animalNotification)
             }
-        }
-    }
-    
-    func addPetAction() async {
-        state = .loading
-        do {
-            try await viewModel.addPet(
-                pet: .init(
-                    image: "",
-                    name: name,
-                    breed: breed,
-                    type: type.rawValue,
-                    colour: color,
-                    birth: Timestamp(date: birth),
-                    weight: weight,
-                    weightUnit: weightUnit.rawValue,
-                    gender: .male
-                ),
-                reminders: petNotifications,
-                inputImage: inputImage ?? UIImage()
-            )
-            await viewModel.addNotification(pets: petNotifications)
-            print("Pet added successfully")
-            dismiss.callAsFunction()
-        } catch {
-            state = .error
-            print("Error adding pet: \(error)")
+            animalNotification = Notification()
         }
     }
 }
 
 #Preview {
-    AddPetScreen(
-        petNotifications: [.init(
-            id: UUID().uuidString,
-            title: "Test",
-            body: "Test",
-            date: Date(),
-            repeatInterval: .daily,
-            notificationType: .playtime,
-            aditionalNotifications: false
-        )]
-    )
+    AddAnimalScreen(mode: .add, action: nil)
 }

@@ -17,14 +17,14 @@ enum ScreenState<T: Equatable>: Equatable {
 struct PetsScreen: View {
     
     @StateObject
-    var petViewModel: PetViewModel = PetViewModel()
+    var animalViewModel = AnimalViewModel()
     
     @State
     var isAddPetFormPresented: Bool = false
     
     var body: some View {
         Group {
-            switch petViewModel.petState {
+            switch animalViewModel.animalState {
             case .empty:
                 VStack(spacing: 32) {
                     Image(systemName: "pawprint.fill")
@@ -33,21 +33,21 @@ struct PetsScreen: View {
                 }
             case .loading:
                 LoadingView()
-            case .loaded(let pets):
+            case .loaded(let animals):
                 List {
-                    ForEach(pets) { pet in
-                        PetRow(pet: pet)
+                    ForEach(animals) { animal in
+                        AnimalRow(animal: animal)
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) {
                                     Task {
-                                        await petViewModel.deletePet(pet: pet)
+                                        await animalViewModel.deleteAnimal(animal)
                                     }
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
                             }
                             .overlay {
-                                NavigationLink(value: pet, label: {})
+                                NavigationLink(value: animal, label: {})
                                     .opacity(0)
                             }
                         
@@ -62,7 +62,7 @@ struct PetsScreen: View {
                 EmptyView()
             }
         }
-        .animation(.easeInOut(duration: 1), value: petViewModel.petState)
+        .animation(.easeInOut(duration: 1), value: animalViewModel.animalState)
         .navigationTitle("Pets")
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -74,23 +74,23 @@ struct PetsScreen: View {
             }
         })
         .fullScreenCover(isPresented: $isAddPetFormPresented, content: {
-            AddPetScreen()
-                .environmentObject(petViewModel)
+            AddAnimalScreen(mode: .add, action: {_ in})
+                .environmentObject(animalViewModel)
         })
-        .navigationDestination(for: Pet.self) { pet in
-            PetDetailScreen(pet: pet)
+        .navigationDestination(for: Animal.self) { animal in
+            AnimalDetailScreen(animal: animal, viewModel: animalViewModel)
         }
     }
 }
 
 #Preview("Data") {
     NavigationStack {
-        PetsScreen(petViewModel: PetViewModel(isTesting: true))
+        PetsScreen()
     }
 }
 
 #Preview("Empty") {
     NavigationStack {
-        PetsScreen(petViewModel: PetViewModel(isTesting: true))
+        PetsScreen()
     }
 }

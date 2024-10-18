@@ -11,7 +11,7 @@ import FirebaseAuth
 
 enum PetsEndpoints: FirestoreEndpoint {
     case getPets
-    case postPet(dto: PetDTO)
+    case postPet(dto: AnimalDTO)
     case deletePet(id: String)
     
     var path: FirestoreReference {
