@@ -113,6 +113,22 @@
         }
       }
     },
+    "by" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "by"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "por"
+          }
+        }
+      }
+    },
     "cat" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -196,7 +212,20 @@
       }
     },
     "Delete" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Borrar"
+          }
+        }
+      }
     },
     "Description" : {
       "localizations" : {
@@ -264,6 +293,22 @@
         }
       }
     },
+    "Fran Alarza" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fran Alarza"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fran Alarza"
+          }
+        }
+      }
+    },
     "Frecuency" : {
       "localizations" : {
         "en" : {
@@ -276,6 +321,25 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Frecuencia"
+          }
+        }
+      }
+    },
+    "INFO" : {
+
+    },
+    "Made with" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made with"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hecho con"
           }
         }
       }
@@ -477,6 +541,22 @@
         }
       }
     },
+    "Rate Us" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate Us"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Valora la app!"
+          }
+        }
+      }
+    },
     "Reminder Info" : {
       "localizations" : {
         "en" : {
@@ -526,6 +606,22 @@
         }
       }
     },
+    "Request New Feature" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Request New Feature"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Pedir nueva funcionalidad"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "en" : {
@@ -538,22 +634,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajustes"
-          }
-        }
-      }
-    },
-    "Settings Screen" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings Screen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pantalla de Ajustes"
           }
         }
       }
@@ -641,7 +721,20 @@
       }
     },
     "Update Pet" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Pet"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actualizar Mascota"
+          }
+        }
+      }
     },
     "weekly" : {
       "extractionState" : "manual",

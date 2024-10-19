@@ -14,6 +14,7 @@
 		260A25032CB6FA1F001A5399 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 260A25022CB6FA1F001A5399 /* FirebaseRemoteConfig */; };
 		263EC29F2CBB2B320028E286 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 263EC29E2CBB2B320028E286 /* Lottie */; };
 		267A33F62CB99D27000326E6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 267A33F52CB99D27000326E6 /* FirebaseStorage */; };
+		269AD4B52CC43470006479D2 /* Shake in Frameworks */ = {isa = PBXBuildFile; productRef = 269AD4B42CC43470006479D2 /* Shake */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				260A24FF2CB6FA1F001A5399 /* FirebaseCrashlytics in Frameworks */,
+				269AD4B52CC43470006479D2 /* Shake in Frameworks */,
 				263EC29F2CBB2B320028E286 /* Lottie in Frameworks */,
 				260A25012CB6FA1F001A5399 /* FirebaseFirestore in Frameworks */,
 				260A24FB2CB6FA1F001A5399 /* FirebaseAnalytics in Frameworks */,
@@ -149,6 +151,7 @@
 				260A25022CB6FA1F001A5399 /* FirebaseRemoteConfig */,
 				267A33F52CB99D27000326E6 /* FirebaseStorage */,
 				263EC29E2CBB2B320028E286 /* Lottie */,
+				269AD4B42CC43470006479D2 /* Shake */,
 			);
 			productName = PetReminder;
 			productReference = 267C17852CB5A891009A5485 /* PetReminder.app */;
@@ -236,6 +239,7 @@
 			packageReferences = (
 				260A24F92CB6FA1F001A5399 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				263EC29D2CBB2B320028E286 /* XCRemoteSwiftPackageReference "lottie-spm" */,
+				269AD4B32CC43470006479D2 /* XCRemoteSwiftPackageReference "shake-ios" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 267C17862CB5A891009A5485 /* Products */;
@@ -630,6 +634,14 @@
 				minimumVersion = 4.5.0;
 			};
 		};
+		269AD4B32CC43470006479D2 /* XCRemoteSwiftPackageReference "shake-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/shakebugs/shake-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 17.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -667,6 +679,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 260A24F92CB6FA1F001A5399 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		269AD4B42CC43470006479D2 /* Shake */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 269AD4B32CC43470006479D2 /* XCRemoteSwiftPackageReference "shake-ios" */;
+			productName = Shake;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
