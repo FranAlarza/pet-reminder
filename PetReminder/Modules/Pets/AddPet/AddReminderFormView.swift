@@ -12,6 +12,7 @@ struct AddReminderFormView: View {
     
     @Binding var petNotification: Notification
     let action: () async -> Void
+    private let hapticManager = HapticFeedbackManager.shared
 
     @Environment(\.dismiss) var dismiss
     
@@ -55,6 +56,7 @@ struct AddReminderFormView: View {
                 Task {
                     await action()
                     dismiss.callAsFunction()
+                    hapticManager.playHapticFeedback(type: .success)
                 }
             }) {
                 Text("Add Reminder")

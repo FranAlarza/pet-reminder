@@ -15,6 +15,7 @@ final class AnimalViewModel: ObservableObject {
 
     private let notificationService: NotificationServiceProtocol
     private let animalService: AnimalServiceProtocol
+    private let hapticManager = HapticFeedbackManager.shared
     private var listeners: [ListenerRegistration] = []
     
     init(
@@ -65,8 +66,10 @@ final class AnimalViewModel: ObservableObject {
             try await animalService.deleteAnimal(animal)
             try await deleteAnimalNotifications(notifications: animal.notifications, petId: animal.id)
             try await getAnimals()
+            hapticManager.playHapticFeedback(type: .success)
             print("Successfully removed pet")
         } catch {
+            hapticManager.playHapticFeedback(type: .error)
             print("Error removing pet: \(error)")
         }
     }

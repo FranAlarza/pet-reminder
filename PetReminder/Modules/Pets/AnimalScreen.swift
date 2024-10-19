@@ -16,6 +16,8 @@ enum ScreenState<T: Equatable>: Equatable {
 
 struct PetsScreen: View {
     
+    private let hapticManager = HapticFeedbackManager.shared
+    
     @StateObject
     var animalViewModel = AnimalViewModel()
     
@@ -68,6 +70,7 @@ struct PetsScreen: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     isAddPetFormPresented.toggle()
+                    hapticManager.playHapticFeedback(type: .success)
                 }) {
                     Image(systemName: "plus")
                 }

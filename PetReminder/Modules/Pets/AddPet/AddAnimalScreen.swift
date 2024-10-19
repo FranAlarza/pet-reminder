@@ -31,6 +31,7 @@ enum AddAnimalState {
 
 struct AddAnimalScreen: View {
     let mode: AddAnimalState
+    private let hapticManager = HapticFeedbackManager.shared
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewModel: AnimalViewModel
     @State var state: AddPetScreenState?
@@ -76,8 +77,10 @@ struct AddAnimalScreen: View {
                             case .add:
                             do {
                                 try await viewModel.addAnimalWithReminders(animal: animal)
+                                hapticManager.playHapticFeedback(type: .success)
                                 dismiss.callAsFunction()
                             } catch {
+                                hapticManager.playHapticFeedback(type: .error)
                                 state = .error
                             }
                         case .edit:
@@ -86,6 +89,7 @@ struct AddAnimalScreen: View {
                                 dismiss.callAsFunction()
                                 action?(animal)
                             } catch {
+                                hapticManager.playHapticFeedback(type: .success)
                                 state = .error
                             }
                         }
@@ -106,6 +110,7 @@ struct AddAnimalScreen: View {
         .onChange(of: inputImage, perform: { newImage in
             if let newImage {
                 animal.image = newImage.convertImageToBase64String() ?? ""
+                hapticManager.playHapticFeedback(type: .success)
             }
         })
         .animation(.easeInOut, value: animal.notifications)
@@ -202,6 +207,7 @@ struct AddAnimalScreen: View {
                             .foregroundStyle(.red)
                             .onTapGesture {
                                 animal.notifications.removeAll(where: { $0.id == notification.id })
+                                hapticManager.playHapticFeedback(type: .success)
                             }
                     }
                     .contentShape(Rectangle())
@@ -215,6 +221,7 @@ struct AddAnimalScreen: View {
             
             Button {
                 addReminderSheetState = .add
+                hapticManager.playHapticFeedback(type: .success)
                 isShowingAddReminder.toggle()
             } label: {
                 Image(systemName: "plus")
