@@ -1,5 +1,5 @@
 //
-//  PetDetailScreen.swift
+//  AnimalDetailScreen.swift
 //  PetReminder
 //
 //  Created by Fran Alarza on 12/10/24.
@@ -7,9 +7,12 @@
 
 import SwiftUI
 
-struct PetDetailScreen: View {
-    let pet: Pet
+struct AnimalDetailScreen: View {
+    @State var animal: Animal
+    @ObservedObject var viewModel: AnimalViewModel
     @State var isAddPetSheetOpen: Bool = false
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .bottom) {
@@ -38,12 +41,21 @@ struct PetDetailScreen: View {
                         }
                 }
             }
-            .sheet(isPresented: $isAddPetSheetOpen, content: AddPetScreen.init)
+            .sheet(isPresented: $isAddPetSheetOpen) {
+                AddAnimalScreen(
+                    mode: .edit,
+                    animal: animal,
+                    inputImage: animal.image.imageFromBase64(), action: { newAnimal in
+                        self.animal = newAnimal
+                    }
+                )
+                    .environmentObject(viewModel)
+            }
         }
     }
     
     var image: Image {
-        if let image = UIImage(data: pet.image) {
+        if let image = animal.image.imageFromBase64() {
             return Image(uiImage: image)
         } else {
             return Image(systemName: "person.crop.circle.fill")
@@ -52,9 +64,9 @@ struct PetDetailScreen: View {
     
     var infoCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(pet.name)
+            Text(animal.name)
                 .font(.title)
-            Text(pet.breed)
+            Text(animal.breed)
                 .font(.subheadline)
                 .foregroundStyle(.gray)
         }
@@ -72,10 +84,10 @@ struct PetDetailScreen: View {
             Spacer()
             VStack(spacing: 0) {
                 HStack(spacing: 12) {
-                    attributeCard(title: "Age", value: "\(pet.age)")
-                    attributeCard(title: "Gender", value: "\(pet.gender.rawValue.capitalized)")
-                    attributeCard(title: "Colour", value: "\(pet.colour)")
-                    attributeCard(title: "Weight", value: "\(pet.weight) \(pet.weightUnit)")
+                    attributeCard(title: "Age", value: "\(animal.age)")
+                    attributeCard(title: "Gender", value: "\(animal.gender.rawValue.capitalized)")
+                    attributeCard(title: "Colour", value: "\(animal.colour)")
+                    attributeCard(title: "Weight", value: "\(animal.weight) \(animal.weightUnit)")
                 }
                 Divider()
                     .background(.attributesText)
@@ -83,7 +95,7 @@ struct PetDetailScreen: View {
                 
                 ScrollView {
                     VStack(spacing: 12) {
-                        ForEach(pet.reminders) { reminder in
+                        ForEach(animal.notifications) { reminder in
                             ReminderRow(petNotification: reminder)
                         }
                     }
@@ -118,11 +130,12 @@ struct PetDetailScreen: View {
 }
 
 #Preview {
-    PetDetailScreen(
-        pet:
+    AnimalDetailScreen(
+        animal:
                 .init(
                     id: UUID().uuidString,
-                    image: Data(),
+                    imagePath: "",
+                    image: "",
                     name: "Cafu",
                     breed: "Tejon",
                     type: .other,
@@ -132,30 +145,32 @@ struct PetDetailScreen: View {
                     weightUnit: "kg",
                     gender: .male,
                     createdAt: Date(),
-                    reminders: [.init(
-                        id: "", title: "Feed",
-                        body: "Test reminder",
-                        date: Date(),
-                        repeatInterval: .daily,
-                        notificationType: .medication,
-                        aditionalNotifications: false
-                    ),
-                                .init(
-                                    id: "", title: "Feed",
-                                    body: "Test reminder",
-                                    date: Date(),
-                                    repeatInterval: .daily,
-                                    notificationType: .medication,
-                                    aditionalNotifications: false
-                                ),
-                                .init(
-                                    id: "", title: "Feed",
-                                    body: "Test reminder",
-                                    date: Date(),
-                                    repeatInterval: .daily,
-                                    notificationType: .medication,
-                                    aditionalNotifications: false
-                                )]
-                )
+                    notifications: [
+                        .init(
+                            id: "", title: "Feed",
+                            body: "Test reminder",
+                            date: Date(),
+                            repeatInterval: .daily,
+                            notificationType: .medication,
+                            aditionalNotifications: false
+                        ),
+                        .init(
+                            id: "", title: "Feed",
+                            body: "Test reminder",
+                            date: Date(),
+                            repeatInterval: .daily,
+                            notificationType: .medication,
+                            aditionalNotifications: false
+                        ),
+                        .init(
+                            id: "", title: "Feed",
+                            body: "Test reminder",
+                            date: Date(),
+                            repeatInterval: .daily,
+                            notificationType: .medication,
+                            aditionalNotifications: false
+                        )
+                    ]
+                ), viewModel: AnimalViewModel()
     )
 }

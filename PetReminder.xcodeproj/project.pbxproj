@@ -444,7 +444,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetReminder/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Healthy Pet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pet Buddy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos acceder a la camara para tomar un selfie a tu mascota";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Necesitamos acceder a la libreria para que puedas seleccionar la mejor foto de tu mascota";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -478,7 +478,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetReminder/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Healthy Pet";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pet Buddy";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Necesitamos acceder a la camara para tomar un selfie a tu mascota";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Necesitamos acceder a la libreria para que puedas seleccionar la mejor foto de tu mascota";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

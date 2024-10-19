@@ -640,6 +640,9 @@
         }
       }
     },
+    "Update Pet" : {
+
+    },
     "weekly" : {
       "extractionState" : "manual",
       "localizations" : {

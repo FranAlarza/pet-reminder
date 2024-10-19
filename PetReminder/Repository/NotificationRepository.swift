@@ -8,13 +8,14 @@
 import Foundation
 import UserNotifications
 
-protocol NotificationManagerProtocol {
+protocol NotificationRepositoryProtocol {
     func requestAuthorization() async
-    func scheduleNotificationWithAditionalNotification(notification: PetNotification) async throws
-    func removeNotification(with identifier: String)
+    func scheduleNotificationWithAditionalNotification(notification: Notification, animalId: String) async throws
+    func removeNotification(animalId: String, notificationIdentifier: String) async throws
+    func deleteAllNotifications(animalId: String) async throws
 }
 
-final class NotificationManager: NotificationManagerProtocol {
+final class NotificationRepository: NotificationRepositoryProtocol {
     
     func requestAuthorization() async {
         do {
@@ -25,23 +26,44 @@ final class NotificationManager: NotificationManagerProtocol {
         }
         
     }
-    func scheduleNotificationWithAditionalNotification(notification: PetNotification) async throws {
+    func scheduleNotificationWithAditionalNotification(notification: Notification, animalId: String) async throws {
         try await scheduleNotification(notification: notification)
         if notification.aditionalNotifications {
             try await scheduleAdditionalNotifications(notification: notification)
         }
+        try await FirestoreService.request(
+                NotificationsEndpoints.postNotifications(
+                    animalId: animalId,
+                    notification: NotificationDTO(notifcation: notification)
+                )
+            )
     }
     
-    func removeNotification(with identifier: String) {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
-        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
+    func removeNotification(animalId: String, notificationIdentifier: String) async throws {
+        try await FirestoreService.request(NotificationsEndpoints.deleteReminders(animalId: animalId, notificationId: notificationIdentifier))
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
+    }
+    
+    func deleteAllNotifications(animalId: String) async throws {
+        let reminders: [NotificationDTO] = try await FirestoreService.request(NotificationsEndpoints.getNotifications(animalId))
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            for notification in reminders {
+                group.addTask {
+                    try await FirestoreService.request(NotificationsEndpoints.deleteReminders(animalId: animalId, notificationId: notification.id))
+                }
+            }
+            try await group.waitForAll()
+        }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [])
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [])
     }
 }
 
-extension NotificationManager {
+extension NotificationRepository {
 
     
-    private func scheduleNotification(notification: PetNotification) async throws {
+    private func scheduleNotification(notification: Notification) async throws {
         let content = UNMutableNotificationContent()
         content.title = notification.title
         content.body = notification.body
@@ -75,7 +97,7 @@ extension NotificationManager {
         return UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: repeats)
     }
     
-    private func scheduleAdditionalNotifications(notification: PetNotification) async throws {
+    private func scheduleAdditionalNotifications(notification: Notification) async throws {
         if let threeDaysBefore = Calendar.current.date(byAdding: .day, value: -3, to: notification.date) {
             try await scheduleNotification(
                 notification: .init(

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ReminderRow: View {
-    let petNotification: PetNotification
+    let petNotification: Notification
     
     var body: some View {
         HStack {

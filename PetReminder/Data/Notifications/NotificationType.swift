@@ -1,21 +1,11 @@
 //
-//  PetNotification.swift
+//  NotificationType.swift
 //  PetReminder
 //
-//  Created by Fran Alarza on 13/10/24.
+//  Created by Fran Alarza on 17/10/24.
 //
 
 import Foundation
-
-struct PetNotification: Identifiable, Equatable, Hashable {
-    let id: String
-    var title: String
-    var body: String
-    var date: Date
-    var repeatInterval: NotificationRepeatInterval
-    var notificationType: NotificationType
-    var aditionalNotifications: Bool
-}
 
 enum NotificationType: String, Identifiable, CaseIterable, Codable {
     case vaccination
