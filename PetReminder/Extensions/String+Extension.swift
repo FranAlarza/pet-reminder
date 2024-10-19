@@ -10,7 +10,10 @@ import UIKit
 
 extension String {
     func imageFromBase64() -> UIImage? {
-        guard let data = Data(base64Encoded: self) else { return nil }
+        guard let data = Data(base64Encoded: self) else {
+            print("[StringExtension] - \(#function) - Error: Could not decode base64 string")
+            return nil
+        }
         return UIImage(data: data)
     }
 }

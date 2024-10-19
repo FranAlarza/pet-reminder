@@ -1,5 +1,5 @@
 //
-//  PetRow.swift
+//  AnimalRow.swift
 //  PetReminder
 //
 //  Created by Fran Alarza on 8/10/24.
@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct PetRow: View {
-    let pet: Pet
+struct AnimalRow: View {
+    let animal: Animal
     var body: some View {
         HStack(alignment: .top) {
-            Image(uiImage: UIImage(data: pet.image) ?? UIImage())
+            Image(uiImage: animal.image.imageFromBase64() ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 150)
@@ -27,18 +27,18 @@ struct PetRow: View {
     
     var petAttributes: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("\(pet.name), \(pet.age)")
+            Text("\(animal.name), \(animal.age)")
                 .font(.system(size: 18, weight: .bold))
-            generateAttributeLine(name: "Breed:", attribute: pet.breed)
-            generateAttributeLine(name: "Type:", attribute: pet.type.rawValue)
-            generateAttributeLine(name: "Color:", attribute: pet.colour)
+            generateAttributeLine(name: "Breed:", attribute: animal.breed)
+            generateAttributeLine(name: "Type:", attribute: animal.type.rawValue)
+            generateAttributeLine(name: "Color:", attribute: animal.colour)
 
             HStack {
                 Image(systemName: "bell.fill")
                     .resizable()
                     .frame(width: 16, height: 16)
                     .foregroundStyle(.attributesText)
-                Text("\(pet.reminders.count)")
+                Text("\(animal.notifications.count)")
                     .foregroundStyle(.gray)
             }
         }
@@ -58,10 +58,10 @@ struct PetRow: View {
 }
 
 #Preview {
-    PetRow(
-        pet:  .init(
+    AnimalRow(
+        animal:  .init(
             id: UUID().uuidString,
-            image: Data(),
+            image: "",
             name: "Cafu",
             breed: "Tejon",
             type: .other,
@@ -71,7 +71,7 @@ struct PetRow: View {
             weightUnit: "kg",
             gender: .male,
             createdAt: Date(),
-            reminders: []
+            notifications: []
         )
     )
 }

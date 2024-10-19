@@ -9,11 +9,20 @@ import Foundation
 import UIKit
 
 extension UIImage {
-    func convertImageToBase64String() -> String? {
-        guard let imageData = self.pngData() else {
-            return nil
+    func convertImageToBase64String(format: ImageFormat = .jpeg(compressionQuality: 0.7)) -> String? {
+        var imageData: Data?
+        switch format {
+        case .png:
+            imageData = self.pngData()
+        case .jpeg(let compressionQuality):
+            imageData = self.jpegData(compressionQuality: compressionQuality)
         }
-        let base64String = imageData.base64EncodedString(options: .lineLength64Characters)
-        return base64String
+        
+        return imageData?.base64EncodedString()
     }
+}
+
+enum ImageFormat {
+    case png
+    case jpeg(compressionQuality: CGFloat)
 }

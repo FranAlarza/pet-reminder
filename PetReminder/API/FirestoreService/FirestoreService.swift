@@ -78,12 +78,14 @@ public final class FirestoreService: FirestoreServicProtocol {
     
     public static func uploadImage(_ image: UIImage?) async throws -> String? {
         guard let image else {
+            print("[FirestoreService] - \(#function) not image found")
             return nil
         }
         
         let storageRef = Storage.storage().reference().child("images/\(UUID().uuidString).jpg")
         
         guard let imageData = image.jpegData(compressionQuality: 0.7) else {
+            print("[FirestoreService] - \(#function) not image quality")
             return nil
         }
         
@@ -107,6 +109,11 @@ public final class FirestoreService: FirestoreServicProtocol {
                 }
             }
         }
+    }
+    
+    public static func deleteImage(_ url: String) async throws {
+        let storageRef = Storage.storage().reference(withPath: url)
+        try await storageRef.delete()
     }
     
     // MARK: - Try to convert to async await with async stream maybe
