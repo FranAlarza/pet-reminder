@@ -35,7 +35,6 @@ final class AnimalViewModel: ObservableObject {
     
     func setAnimalState(animals: [Animal]) {
         animalState = animals.isEmpty ? .empty : .loaded(animals)
-        print("Successfully subscribed to pets with state: \(String(describing: animalState))")
     }
     
     func addAnimalWithReminders(animal: Animal) async throws {
@@ -54,6 +53,7 @@ final class AnimalViewModel: ObservableObject {
         do {
             let animals = try await animalService.getAnimalsWithReminders()
             setAnimalState(animals: animals)
+            print("Successfully fetched pets, number of pets: \(animals.count)")
         } catch {
             animalState = .error
             print("Error getting pets: \(error)")

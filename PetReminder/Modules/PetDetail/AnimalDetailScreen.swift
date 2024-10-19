@@ -134,6 +134,7 @@ struct AnimalDetailScreen: View {
         animal:
                 .init(
                     id: UUID().uuidString,
+                    imagePath: "",
                     image: "",
                     name: "Cafu",
                     breed: "Tejon",

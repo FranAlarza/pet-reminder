@@ -58,7 +58,15 @@ final class AnimalRepository: AnimalRepositoryProtocol {
     }
     
     func delete(_ animal: Animal) async throws {
-        try await FirestoreService.request(PetsEndpoints.deletePet(id: animal.id))
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                try await FirestoreService.deleteImage(animal.imagePath)
+            }
+            taskGroup.addTask {
+                try await FirestoreService.request(PetsEndpoints.deletePet(id: animal.id))
+            }
+            try await taskGroup.waitForAll()
+        }
     }
     
     func subscribe(to pet: Animal, completion: @escaping (Result<Animal, any Error>) -> Void) {

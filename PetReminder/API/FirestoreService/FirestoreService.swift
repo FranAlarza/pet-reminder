@@ -111,6 +111,11 @@ public final class FirestoreService: FirestoreServicProtocol {
         }
     }
     
+    public static func deleteImage(_ url: String) async throws {
+        let storageRef = Storage.storage().reference(withPath: url)
+        try await storageRef.delete()
+    }
+    
     // MARK: - Try to convert to async await with async stream maybe
     public static func subscribe<T>(_ endpoint: any FirestoreEndpoint, onUpdate: @escaping (Result<[T], FirestoreServiceError>) -> Void) -> ListenerRegistration? where T: FirestoreIdentifiable {
         guard let ref = endpoint.path as? CollectionReference else {

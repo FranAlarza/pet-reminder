@@ -9,6 +9,7 @@ import Foundation
 
 struct Animal: Hashable, Identifiable {
     var id: String = UUID().uuidString
+    var imagePath: String = ""
     var image: String = ""
     var name: String = "Daisy"
     var breed: String = "Podenco"
@@ -34,6 +35,7 @@ struct Animal: Hashable, Identifiable {
 extension Animal {
     init(dto: AnimalDTO) {
         id = dto.id
+        imagePath = dto.image
         image = dto.image
         name = dto.name
         breed = dto.breed
