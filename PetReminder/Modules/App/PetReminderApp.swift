@@ -12,6 +12,7 @@ import FirebaseAuth
 @main
 struct PetReminderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @Environment(\.scenePhase) var scenePhase
     private let authService: AuthServiceProtocol = AuthService()
     private let notificationManager: NotificationRepositoryProtocol = NotificationRepository()
     
@@ -21,6 +22,17 @@ struct PetReminderApp: App {
                 .task {
                     await notificationManager.requestAuthorization()
                     await authService.login()
+                }
+                .onChange(of: scenePhase) { phase in
+                    switch phase {
+                    case .active:
+                        AnalitycsManager.shared.log(.appActive)
+                    case .inactive:
+                        AnalitycsManager.shared.log(.appInactive)
+                    case .background:
+                        AnalitycsManager.shared.log(.appBackground)
+                    default: break
+                    }
                 }
         }
     }

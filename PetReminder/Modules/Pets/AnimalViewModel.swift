@@ -50,6 +50,7 @@ final class AnimalViewModel: ObservableObject {
     }
     
     func getAnimals() async throws {
+        animalState = .loading
         do {
             let animals = try await animalService.getAnimalsWithReminders()
             setAnimalState(animals: animals)

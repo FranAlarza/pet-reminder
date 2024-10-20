@@ -69,6 +69,7 @@ struct PetsScreen: View {
         .toolbar(content: {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
+                    AnalitycsManager.shared.log(.addAnimalOpen)
                     isAddPetFormPresented.toggle()
                     hapticManager.playHapticFeedback(type: .success)
                 }) {

@@ -17,12 +17,14 @@ final class AuthService: AuthServiceProtocol {
     
     func login() async {
         do {
+            AnalitycsManager.shared.log(.loginLaunched)
             let userId = Auth.auth().currentUser?.uid ?? ""
             let userExist = try await Firestore.firestore().collection("users").whereField("id", isEqualTo: userId).getDocuments()
             if !userExist.isEmpty {
                 debugPrint("User already registered")
             }
         } catch {
+            AnalitycsManager.shared.log(.registerLaunched)
             await register()
         }
     }

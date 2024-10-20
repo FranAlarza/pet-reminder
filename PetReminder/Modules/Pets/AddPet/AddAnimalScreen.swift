@@ -78,6 +78,7 @@ struct AddAnimalScreen: View {
                             do {
                                 try await viewModel.addAnimalWithReminders(animal: animal)
                                 hapticManager.playHapticFeedback(type: .success)
+                                AnalitycsManager.shared.log(.animalCreated(AnimalAnalitycsEvent(animal: animal)))
                                 dismiss.callAsFunction()
                             } catch {
                                 hapticManager.playHapticFeedback(type: .error)

@@ -58,6 +58,7 @@ final class AnimalRepository: AnimalRepositoryProtocol {
     }
     
     func delete(_ animal: Animal) async throws {
+        AnalitycsManager.shared.log(.deleteAnimal(AnimalAnalitycsEvent(animal: animal)))
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             taskGroup.addTask {
                 try await FirestoreService.deleteImage(animal.imagePath)

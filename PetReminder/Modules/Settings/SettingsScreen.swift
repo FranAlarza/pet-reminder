@@ -17,9 +17,10 @@ struct SettingsScreen: View {
                 List {
                     Section("INFO") {
                         Button {
+                            AnalitycsManager.shared.log(.rateUs)
                             requestReview.callAsFunction()
                         } label: {
-                            HStack(spacing: 16) {
+                            HStack(spacing: 14) {
                                 Image(systemName: "star.fill")
                                 Text("Rate Us")
                                     .foregroundStyle(.primary)
@@ -30,6 +31,7 @@ struct SettingsScreen: View {
                         }
                         
                         Button {
+                            AnalitycsManager.shared.log(.shakeOpen)
                             Shake.show()
                         } label: {
                             HStack(spacing: 20) {
