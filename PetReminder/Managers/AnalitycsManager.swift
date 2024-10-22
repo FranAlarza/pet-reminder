@@ -46,7 +46,32 @@ enum AnalitycsEvent {
     case loginLaunched
     
     var name: String {
-        "\(self)"
+        switch self {
+        case .appActive:
+            "app_active"
+        case .appBackground:
+            "app_background"
+        case .appInactive:
+            "app_inactive"
+        case .userDidLogin:
+            "userDidLogin"
+        case .userDidLogout:
+            "user_did_logout"
+        case .animalCreated:
+            "animal_created"
+        case .deleteAnimal:
+            "delete_animal"
+        case .addAnimalOpen:
+            "add_animal_open"
+        case .rateUs:
+            "rate_us"
+        case .shakeOpen:
+            "shake_open"
+        case .registerLaunched:
+            "register_launched"
+        case .loginLaunched:
+            "login_launched"
+        }
     }
 }
 

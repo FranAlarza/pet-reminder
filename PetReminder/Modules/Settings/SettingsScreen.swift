@@ -11,10 +11,36 @@ import Shake
 
 struct SettingsScreen: View {
     @Environment(\.requestReview) var requestReview
+    @ObservedObject var viewModel: SettingsViewModel = SettingsViewModel()
     var body: some View {
         ZStack {
             VStack(alignment: .center) {
                 List {
+                    Button {
+                        AnalitycsManager.shared.log(.rateUs)
+                        requestReview.callAsFunction()
+                    } label: {
+                        HStack(spacing: 14) {
+                            Image(systemName: "crown.fill")
+                            Text(viewModel.subscriptionState)
+                                .foregroundStyle(.primary)
+                                .font(.body)
+                            Spacer()
+                        }
+                    }
+                    
+                    Button {
+                        viewModel.restorePurchase()
+                    } label: {
+                        HStack(spacing: 14) {
+                            Image(systemName: "crown.fill")
+                            Text("Restore Purchase")
+                                .foregroundStyle(.primary)
+                                .font(.body)
+                            Spacer()
+                        }
+                    }
+                    
                     Section("INFO") {
                         Button {
                             AnalitycsManager.shared.log(.rateUs)
@@ -66,5 +92,5 @@ struct SettingsScreen: View {
 }
 
 #Preview {
-    SettingsScreen()
+    SettingsScreen(viewModel: SettingsViewModel())
 }
