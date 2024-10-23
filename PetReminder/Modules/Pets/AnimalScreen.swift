@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RevenueCat
 
 enum ScreenState<T: Equatable>: Equatable {
     case loaded([T])
@@ -23,6 +24,10 @@ struct PetsScreen: View {
     
     @State
     var isAddPetFormPresented: Bool = false
+    
+    @State
+    var isSubscriptionPresented: Bool = false
+
     
     var body: some View {
         Group {
@@ -70,7 +75,11 @@ struct PetsScreen: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     AnalitycsManager.shared.log(.addAnimalOpen)
-                    isAddPetFormPresented.toggle()
+                    if animalViewModel.checkIfNeedSuscribe() {
+                        isSubscriptionPresented.toggle()
+                    } else {
+                        isAddPetFormPresented.toggle()
+                    }
                     hapticManager.playHapticFeedback(type: .success)
                 }) {
                     Image(systemName: "plus")
@@ -80,6 +89,9 @@ struct PetsScreen: View {
         .fullScreenCover(isPresented: $isAddPetFormPresented, content: {
             AddAnimalScreen(mode: .add, action: {_ in})
                 .environmentObject(animalViewModel)
+        })
+        .fullScreenCover(isPresented: $isSubscriptionPresented, content: {
+            PaywallScreen()
         })
         .navigationDestination(for: Animal.self) { animal in
             AnimalDetailScreen(animal: animal, viewModel: animalViewModel)

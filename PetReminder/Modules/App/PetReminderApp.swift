@@ -9,6 +9,7 @@ import SwiftUI
 import FirebaseCore
 import FirebaseAuth
 import RevenueCat
+import RevenueCatUI
 
 @main
 struct PetReminderApp: App {
@@ -16,7 +17,7 @@ struct PetReminderApp: App {
     @Environment(\.scenePhase) var scenePhase
     private let authService: AuthServiceProtocol = AuthService()
     private let notificationManager: NotificationRepositoryProtocol = NotificationRepository()
-    private let subscriptionManager = SubscriptionManager()
+    private let subscriptionManager = SubscriptionManager.shared
     
     init() {
         Purchases.configure(withAPIKey: "appl_FxmhIZjdmrByUxbJCTlbHTlZpFi")

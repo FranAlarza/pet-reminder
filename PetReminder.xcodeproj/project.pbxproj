@@ -14,6 +14,7 @@
 		260A25032CB6FA1F001A5399 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 260A25022CB6FA1F001A5399 /* FirebaseRemoteConfig */; };
 		263EC29F2CBB2B320028E286 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 263EC29E2CBB2B320028E286 /* Lottie */; };
 		267A33F62CB99D27000326E6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 267A33F52CB99D27000326E6 /* FirebaseStorage */; };
+		268F135A2CC856860009F23A /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = 268F13592CC856860009F23A /* RevenueCatUI */; };
 		269AD4B52CC43470006479D2 /* Shake in Frameworks */ = {isa = PBXBuildFile; productRef = 269AD4B42CC43470006479D2 /* Shake */; };
 		269AD4B72CC52959006479D2 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 269AD4B62CC52959006479D2 /* FirebaseAnalyticsOnDeviceConversion */; };
 		269AD4B92CC52959006479D2 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 269AD4B82CC52959006479D2 /* FirebaseAnalyticsWithoutAdIdSupport */; };
@@ -87,6 +88,7 @@
 				260A25012CB6FA1F001A5399 /* FirebaseFirestore in Frameworks */,
 				269AD4B72CC52959006479D2 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
 				260A24FB2CB6FA1F001A5399 /* FirebaseAnalytics in Frameworks */,
+				268F135A2CC856860009F23A /* RevenueCatUI in Frameworks */,
 				260A24FD2CB6FA1F001A5399 /* FirebaseAuth in Frameworks */,
 				260A25032CB6FA1F001A5399 /* FirebaseRemoteConfig in Frameworks */,
 				267A33F62CB99D27000326E6 /* FirebaseStorage in Frameworks */,
@@ -161,6 +163,7 @@
 				269AD4B62CC52959006479D2 /* FirebaseAnalyticsOnDeviceConversion */,
 				269AD4B82CC52959006479D2 /* FirebaseAnalyticsWithoutAdIdSupport */,
 				26E8710F2CC7093900B34867 /* RevenueCat */,
+				268F13592CC856860009F23A /* RevenueCatUI */,
 			);
 			productName = PetReminder;
 			productReference = 267C17852CB5A891009A5485 /* PetReminder.app */;
@@ -705,6 +708,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 260A24F92CB6FA1F001A5399 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		268F13592CC856860009F23A /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26E8710E2CC7093900B34867 /* XCRemoteSwiftPackageReference "purchases-ios-spm" */;
+			productName = RevenueCatUI;
 		};
 		269AD4B42CC43470006479D2 /* Shake */ = {
 			isa = XCSwiftPackageProductDependency;

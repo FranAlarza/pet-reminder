@@ -11,7 +11,13 @@ import RevenueCat
 @MainActor
 final class OfferingRepository: ObservableObject {
     
-    @Published private(set) var packagesViewModels: [PackageViewModel] = []
+    @Published var packagesViewModels: [PackageViewModel] = []
+    @Published var purchaseCompleted: Bool = false
+    init() {
+        Task {
+            await start()
+        }
+    }
     
     func start() async {
         do {
@@ -27,8 +33,17 @@ final class OfferingRepository: ObservableObject {
     func purchase(_ model: PackageViewModel) async {
         do {
             let _ = try await Purchases.shared.purchase(package: model.package)
+            purchaseCompleted = true
         } catch {
             print("Unable to purchase package: \(error.localizedDescription)")
+        }
+    }
+    
+    func restorePurchases() async {
+        do {
+            let _ = try await Purchases.shared.restorePurchases()
+        } catch {
+            print("Unable to restore purchases: \(error.localizedDescription)")
         }
     }
     
@@ -48,11 +63,17 @@ struct PackageViewModel: Identifiable {
         case .year:
             return "Annual"
         default:
-            return nil
+            return "Life Time"
         }
     }
     
     var price: String {
         package.storeProduct.localizedPriceString
+    }
+}
+
+extension PackageViewModel {
+    init () {
+        self.package = .init(identifier: "", packageType: .monthly, storeProduct: .init(sk1Product: .init()), offeringIdentifier: "")
     }
 }

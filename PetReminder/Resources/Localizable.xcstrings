@@ -325,6 +325,9 @@
         }
       }
     },
+    "Get Subscription" : {
+
+    },
     "INFO" : {
 
     },
@@ -376,6 +379,9 @@
           }
         }
       }
+    },
+    "No commitment cancel any time" : {
+
     },
     "No pets yet. Add one below." : {
       "localizations" : {
@@ -622,7 +628,7 @@
         }
       }
     },
-    "Restore Purchase" : {
+    "Restore purchases" : {
 
     },
     "Settings" : {
@@ -658,6 +664,9 @@
         }
       }
     },
+    "Subscribe for premium features" : {
+
+    },
     "Take Photo" : {
       "localizations" : {
         "en" : {
@@ -673,6 +682,9 @@
           }
         }
       }
+    },
+    "Terms and conditions apply. Subscriptions will be changed via your iTunes account. [Terms of Use](https://www.aibowling.app/terms-and-condictions) and [Privacy Policy](https://www.aibowling.app/privacy-policy)" : {
+
     },
     "Title" : {
       "localizations" : {

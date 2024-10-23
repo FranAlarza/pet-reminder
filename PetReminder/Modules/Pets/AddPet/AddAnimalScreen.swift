@@ -48,6 +48,7 @@ struct AddAnimalScreen: View {
     @State var isTakePhotoSheetShowed: Bool = false
     @State var isShowingImagePicker: Bool = false
     @State var isShowingAddReminder: Bool = false
+    @State var isSubscriptionPresented: Bool = false
     @State var addReminderSheetState: AddReminderSheetState = .add
     
     let action: ((Animal) -> Void)?

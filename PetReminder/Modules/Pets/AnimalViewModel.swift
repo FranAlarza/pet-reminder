@@ -15,15 +15,18 @@ final class AnimalViewModel: ObservableObject {
 
     private let notificationService: NotificationServiceProtocol
     private let animalService: AnimalServiceProtocol
+    private let subscriptionManager: SubscriptionManager
     private let hapticManager = HapticFeedbackManager.shared
     private var listeners: [ListenerRegistration] = []
     
     init(
         notificationService: NotificationServiceProtocol = NotificationService(),
-        animalService: AnimalServiceProtocol = AnimalService()
+        animalService: AnimalServiceProtocol = AnimalService(),
+        subscriptionManager: SubscriptionManager = SubscriptionManager.shared
     ) {
         self.notificationService = notificationService
         self.animalService = animalService
+        self.subscriptionManager = subscriptionManager
         Task {
             try await getAnimals()
         }
@@ -73,6 +76,17 @@ final class AnimalViewModel: ObservableObject {
             hapticManager.playHapticFeedback(type: .error)
             print("Error removing pet: \(error)")
         }
+    }
+    
+    func checkIfNeedSuscribe() -> Bool {
+        if case let .loaded(pets) = animalState {
+            if pets.count > 0 && !subscriptionManager.isSubscribed {
+                return true
+            } else {
+                return false
+            }
+        }
+        return false
     }
     
 //    func suscribeToPets() {

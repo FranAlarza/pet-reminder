@@ -1,0 +1,174 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "485FF22E",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "19.99",
+      "familyShareable" : false,
+      "internalID" : "6737282434",
+      "localizations" : [
+        {
+          "description" : "Lifetime Access",
+          "displayName" : "Lifetime Access",
+          "locale" : "en_US"
+        },
+        {
+          "description" : "Acceso Vitalicio",
+          "displayName" : "Acceso Vitalicio",
+          "locale" : "es_ES"
+        }
+      ],
+      "productID" : "pb_1999_all",
+      "referenceName" : "Pet Buddy $19.99",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6737209206",
+    "_developerTeamID" : "F9QA4T4B5C",
+    "_failTransactionsEnabled" : false,
+    "_lastSynchronizedDate" : 751412121.55366504,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21566885",
+      "localizations" : [
+
+      ],
+      "name" : "Pet Buddy Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6737266694",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Aceso Pro Anual",
+              "displayName" : "Aceso Pro Anual",
+              "locale" : "es_ES"
+            },
+            {
+              "description" : "Pro Access Annual",
+              "displayName" : "Pro Access Annual",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "pb_999_1y",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Annual $9.99",
+          "subscriptionGroupID" : "21566885",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6737267951",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Pro Subscripcion (Monthly)",
+              "displayName" : "Pro Subscripcion (Monthly)",
+              "locale" : "en_US"
+            },
+            {
+              "description" : "Suscripcion Pro (Mensual)",
+              "displayName" : "Suscripcion Pro (Mensual)",
+              "locale" : "es_ES"
+            }
+          ],
+          "productID" : "pb_099_1m",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly $0.99",
+          "subscriptionGroupID" : "21566885",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

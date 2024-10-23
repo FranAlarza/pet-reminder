@@ -22,8 +22,9 @@ final class SettingsViewModel: ObservableObject {
     private let subscriptionManager: SubscriptionManager
     private let cancellables = Set<AnyCancellable>()
     
-    init(subscriptionManager: SubscriptionManager = SubscriptionManager()) {
+    init(subscriptionManager: SubscriptionManager = SubscriptionManager.shared) {
         self.subscriptionManager = subscriptionManager
+        start()
     }
     
     func start() {
