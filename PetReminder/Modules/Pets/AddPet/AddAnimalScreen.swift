@@ -29,6 +29,10 @@ enum AddAnimalState {
     case edit
 }
 
+enum FocusedField {
+    case name, breed, color
+}
+
 struct AddAnimalScreen: View {
     let mode: AddAnimalState
     private let hapticManager = HapticFeedbackManager.shared
@@ -36,6 +40,7 @@ struct AddAnimalScreen: View {
     @EnvironmentObject var viewModel: AnimalViewModel
     @State var state: AddPetScreenState?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @FocusState var isFocused: FocusedField?
     
     // Form Data
     @State var animal = Animal()
@@ -172,13 +177,31 @@ struct AddAnimalScreen: View {
                 animalTypePicker
                 TextField("Name", text: $animal.name)
                     .submitLabel(.next)
+                    .focused($isFocused, equals: .name)
+                    .onSubmit {
+                        isFocused = .breed
+                    }
                 TextField("Breed", text: $animal.breed)
                     .submitLabel(.next)
+                    .focused($isFocused, equals: .breed)
+                    .onSubmit {
+                        isFocused = .color
+                    }
                 TextField("Color", text: $animal.colour)
                     .submitLabel(.next)
+                    .submitLabel(.next)
+                    .focused($isFocused, equals: .color)
+                    .onSubmit {
+                        UIApplication.shared.dismissKeyboard()
+                    }
+                Picker("Gender", selection: $animal.gender) {
+                    ForEach(PetGender.allCases, id: \.self) { type in
+                        Text(LocalizedStringResource(stringLiteral: type.rawValue)).tag(type)
+                    }
+                }
                 HStack {
                     TextField("Weight", value: $animal.weight, format: .number)
-                        .keyboardType(.numberPad)
+                        .keyboardType(.decimalPad)
                         .submitLabel(.next)
                     Picker("Unit", selection: $animal.weightUnit) {
                         ForEach(WeightUnit.allCases, id: \.self) { unit in

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import RevenueCat
+import RevenueCatUI
 
 enum ScreenState<T: Equatable>: Equatable {
     case loaded([T])
@@ -91,7 +92,7 @@ struct PetsScreen: View {
                 .environmentObject(animalViewModel)
         })
         .fullScreenCover(isPresented: $isSubscriptionPresented, content: {
-            PaywallScreen()
+            PaywallView()
         })
         .navigationDestination(for: Animal.self) { animal in
             AnimalDetailScreen(animal: animal, viewModel: animalViewModel)
