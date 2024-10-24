@@ -8,68 +8,91 @@
 import SwiftUI
 import StoreKit
 import Shake
+import RevenueCatUI
 
 struct SettingsScreen: View {
     @Environment(\.requestReview) var requestReview
     @ObservedObject var viewModel: SettingsViewModel = SettingsViewModel()
+    @State var isSubscriptionSheetPresented: Bool = false
     var body: some View {
-        ZStack {
-            VStack(alignment: .center) {
-                List {
-                    HStack(spacing: 14) {
-                        Image(systemName: "crown.fill")
-                            .foregroundStyle(.attributesText)
-                        Text(viewModel.subscriptionState)
-                            .foregroundStyle(.green)
-                            .font(.body)
-                        Spacer()
-                    }
-                    
-                    Section("INFO") {
-                        Button {
-                            AnalitycsManager.shared.log(.rateUs)
-                            requestReview.callAsFunction()
-                        } label: {
-                            HStack(spacing: 14) {
-                                Image(systemName: "star.fill")
-                                Text("Rate Us")
-                                    .foregroundStyle(.primary)
-                                    .font(.body)
-                                Spacer()
-
-                            }
-                        }
-                        
-                        Button {
-                            AnalitycsManager.shared.log(.shakeOpen)
-                            Shake.show()
-                        } label: {
-                            HStack(spacing: 20) {
-                                Image(systemName: "lightbulb.fill")
-                                Text("Request New Feature")
-                                    .foregroundStyle(.primary)
-                                    .font(.body)
-                                Spacer()
-                            }
+        VStack(alignment: .center) {
+            List {
+                suscribeButton
+                
+                Section("INFO") {
+                    Button {
+                        AnalitycsManager.shared.log(.rateUs)
+                        requestReview.callAsFunction()
+                    } label: {
+                        HStack(spacing: 14) {
+                            Image(systemName: "star.fill")
+                            Text("Rate Us")
+                                .foregroundStyle(.detailSheet)
+                                .font(.body)
+                                .bold()
+                            Spacer()
+                            
                         }
                     }
                     
+                    Button {
+                        AnalitycsManager.shared.log(.shakeOpen)
+                        Shake.show()
+                    } label: {
+                        HStack(spacing: 20) {
+                            Image(systemName: "lightbulb.fill")
+                            Text("Request New Feature")
+                                .foregroundStyle(.detailSheet)
+                                .font(.body)
+                                .bold()
+                            Spacer()
+                        }
+                    }
                 }
-                .listStyle(.insetGrouped)
+                .listRowBackground(Color.gray.opacity(0.1))
+                
+                HStack(spacing: 4) {
+                    Text("Made with")
+                    
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.red)
+                    
+                    Text("by")
+                    
+                    Link("Fran Alarza", destination: URL(string: "https://www.linkedin.com/in/francisco-javier-alarza-sanchez/")!)
+                        .foregroundColor(.blue)
+                        .bold()
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .font(.body)
             }
-            HStack(spacing: 4) {
-                Text("Made with")
-                
-                Image(systemName: "heart.fill")
-                    .foregroundColor(.red)
-                
-                Text("by")
-                
-                Link("Fran Alarza", destination: URL(string: "https://www.linkedin.com/in/francisco-javier-alarza-sanchez/")!)
-                    .foregroundColor(.blue)
+
+        }
+        .fullScreenCover(isPresented: $isSubscriptionSheetPresented, content: {
+            PaywallView()
+        })
+        .scrollContentBackground(.hidden)
+    }
+    
+    var suscribeButton: some View {
+        return Button {
+            isSubscriptionSheetPresented.toggle()
+        } label: {
+            HStack(spacing: 14) {
+                Image(systemName: "crown.fill")
+                    .foregroundStyle(.yellow)
+                Text(LocalizedStringResource(stringLiteral: viewModel.subscriptionState.title))
+                    .foregroundStyle(.white)
+                    .font(.body)
                     .bold()
+                Spacer()
             }
-            .font(.body)
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(.attributesText)
+                    .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
+            }
         }
     }
 }

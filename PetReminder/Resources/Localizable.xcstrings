@@ -195,22 +195,6 @@
         }
       }
     },
-    "Date" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fecha"
-          }
-        }
-      }
-    },
     "Delete" : {
       "localizations" : {
         "en" : {
@@ -326,10 +310,46 @@
       }
     },
     "Get Subscription" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Subscription"
+          }
+        }
+      }
     },
     "INFO" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INFO"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INFO"
+          }
+        }
+      }
+    },
+    "Initial Date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Initial Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha Inicio"
+          }
+        }
+      }
     },
     "Made with" : {
       "localizations" : {
@@ -665,7 +685,14 @@
       }
     },
     "Subscribe for premium features" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe for premium features"
+          }
+        }
+      }
     },
     "Take Photo" : {
       "localizations" : {
@@ -735,6 +762,23 @@
         }
       }
     },
+    "Unlock all pro features" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock all pro features"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazte Premium"
+          }
+        }
+      }
+    },
     "Update Pet" : {
       "localizations" : {
         "en" : {
@@ -747,6 +791,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Actualizar Mascota"
+          }
+        }
+      }
+    },
+    "Upgrade Now!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upgrade Now!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "¡Sube de nivel!"
           }
         }
       }
