@@ -8,16 +8,31 @@
 import Foundation
 import Combine
 import RevenueCat
+import SwiftUICore
 
 final class SettingsViewModel: ObservableObject {
  
-    private enum SubscriptionState: String {
+    enum SubscriptionState: String {
         
         case subscribed = "Subscribed"
         case notSubscribed = "Not Subscribed"
+        
+        var title: String {
+            switch self {
+            case .subscribed: return "Upgrade Now!"
+            case .notSubscribed: return "Unlock all pro features"
+            }
+        }
+        
+        var color: Color {
+            switch self {
+            case .subscribed: return .green
+            case .notSubscribed: return .red
+            }
+        }
     }
     
-    @Published private(set) var subscriptionState = SubscriptionState.notSubscribed.rawValue
+    @Published var subscriptionState = SubscriptionState.notSubscribed
     
     private let subscriptionManager: SubscriptionManager
     private let cancellables = Set<AnyCancellable>()
@@ -29,10 +44,10 @@ final class SettingsViewModel: ObservableObject {
     
     func start() {
         subscriptionManager.subscribePublisher
-            .map { isSuscribed -> String in
+            .map { isSuscribed in
                 isSuscribed
-                ? SubscriptionState.subscribed.rawValue
-                : SubscriptionState.notSubscribed.rawValue
+                ? SubscriptionState.subscribed
+                : SubscriptionState.notSubscribed
             }.assign(to: &$subscriptionState)
     }
     

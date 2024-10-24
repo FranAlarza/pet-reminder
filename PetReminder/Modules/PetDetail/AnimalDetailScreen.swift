@@ -74,7 +74,7 @@ struct AnimalDetailScreen: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
-                .fill(Color(.systemBackground))
+                .fill(Color(.primary))
                 .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
         }
     }
@@ -107,7 +107,7 @@ struct AnimalDetailScreen: View {
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerSize: CGSize(width: 36, height: 36))
-                    .fill(Color(.detailSheet))
+                    .fill(Color(.primary))
             }
         }
     }

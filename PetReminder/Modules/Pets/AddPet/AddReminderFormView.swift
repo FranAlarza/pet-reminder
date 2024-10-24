@@ -47,7 +47,7 @@ struct AddReminderFormView: View {
                             Text(LocalizedStringResource(stringLiteral: repeatInterval.rawValue)).tag(repeatInterval)
                         }
                     }
-                    DatePicker("Date", selection: $petNotification.date)
+                    DatePicker("Initial Date", selection: $petNotification.date)
                     Toggle("Notify me before", isOn: $petNotification.aditionalNotifications)
                 }
             }
