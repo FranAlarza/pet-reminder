@@ -93,15 +93,35 @@ struct AnimalDetailScreen: View {
                     .background(.attributesText)
                     .padding()
                 
-                ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(animal.notifications) { reminder in
-                            ReminderRow(petNotification: reminder)
-                        }
+                if animal.notifications.isEmpty {
+                    HStack {
+                        Label("Add Reminder", systemImage: "plus.circle")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(Color(.attributesText))
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
+                                    .fill(Color(.systemBackground))
+                                    .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
+                            }
+                            .onTapGesture {
+                                isAddPetSheetOpen.toggle()
+                            }
+                        Spacer()
                     }
-                    .padding(.horizontal)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(animal.notifications) { reminder in
+                                ReminderRow(petNotification: reminder)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                
             }
             .padding(.top, 48)
             .frame(maxWidth: .infinity)
