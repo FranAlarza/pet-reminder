@@ -68,7 +68,7 @@ struct SettingsScreen: View {
             }
 
         }
-        .fullScreenCover(isPresented: $isSubscriptionSheetPresented, content: {
+        .sheet(isPresented: $isSubscriptionSheetPresented, content: {
             PaywallView()
         })
         .scrollContentBackground(.hidden)

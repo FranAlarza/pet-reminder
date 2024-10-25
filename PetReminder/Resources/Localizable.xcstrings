@@ -681,19 +681,26 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Request New Feature"
+            "value" : "Contact with us"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Pedir nueva funcionalidad"
+            "value" : "Contacta con nosotros"
           }
         }
       }
     },
     "Restore purchases" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore purchases"
+          }
+        }
+      }
     },
     "Settings" : {
       "localizations" : {

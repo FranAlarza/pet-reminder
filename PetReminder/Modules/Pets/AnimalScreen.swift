@@ -91,7 +91,7 @@ struct PetsScreen: View {
             AddAnimalScreen(mode: .add, action: {_ in})
                 .environmentObject(animalViewModel)
         })
-        .fullScreenCover(isPresented: $isSubscriptionPresented, content: {
+        .sheet(isPresented: $isSubscriptionPresented, content: {
             PaywallView()
         })
         .navigationDestination(for: Animal.self) { animal in
