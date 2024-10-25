@@ -211,6 +211,9 @@ struct AddAnimalScreen: View {
                     TextField("Weight", value: $animal.weight, format: .number)
                         .keyboardType(.decimalPad)
                         .submitLabel(.next)
+                        .onSubmit {
+                            UIApplication.shared.dismissKeyboard()
+                        }
                     Picker("Unit", selection: $animal.weightUnit) {
                         ForEach(WeightUnit.allCases, id: \.self) { unit in
                             Text(LocalizedStringResource(stringLiteral: unit.rawValue)).tag(unit.rawValue)
@@ -219,6 +222,7 @@ struct AddAnimalScreen: View {
                 }
                 DatePicker("Birthday", selection: $animal.birth, displayedComponents: [.date])
             }
+            
             reminderSection
         }
     }
@@ -253,6 +257,7 @@ struct AddAnimalScreen: View {
             }
             
             Button {
+                UIApplication.shared.dismissKeyboard()
                 addReminderSheetState = .add
                 hapticManager.playHapticFeedback(type: .success)
                 isShowingAddReminder.toggle()
