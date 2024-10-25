@@ -67,7 +67,7 @@ struct AddAnimalScreen: View {
                 .padding(.top, mode == .add ? 32 : 0)
             Button(
                 action: {
-                    UIApplication.shared.dismissKeyboard()
+                    isFocused = nil
                     Task {
                         state = .loading
                         switch mode {
@@ -106,22 +106,22 @@ struct AddAnimalScreen: View {
             .padding(.horizontal)
             Spacer()
         }
+        .enableInjection()
+        .animation(.easeInOut, value: animal.notifications)
         .overlay(alignment: .topLeading, content: {
             if mode == .add {
                 dismissButton
             }
         })
-        .enableInjection()
+        .overlay(content: {
+            if state == .loading {
+                LoadingView()
+            }
+        })
         .onChange(of: inputImage, perform: { newImage in
             if let newImage {
                 animal.image = newImage.convertImageToBase64String() ?? ""
                 hapticManager.playHapticFeedback(type: .success)
-            }
-        })
-        .animation(.easeInOut, value: animal.notifications)
-        .overlay(content: {
-            if state == .loading {
-                LoadingView()
             }
         })
         .sheet(isPresented: $isTakePhotoSheetShowed) {
@@ -133,11 +133,13 @@ struct AddAnimalScreen: View {
                 selectedImage: $inputImage
             )
         }
-        .sheet(isPresented: $isShowingAddReminder) {
+        .sheet(isPresented: $isShowingAddReminder, onDismiss: {
+            animalNotification = .init()
+        }) {
             addRemainderForm
                 .presentationDetents([.fraction(0.6)])
         }
-    }
+     }
     
     var dismissButton: some View {
         Button(action: dismiss.callAsFunction,
@@ -172,12 +174,13 @@ struct AddAnimalScreen: View {
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .onTapGesture {
+            isFocused = nil
             isTakePhotoSheetShowed = true
         }
     }
     
     var petInfoForm: some View {
-        Form {
+        List {
             Section("Pet Information") {
                 petPhoto
                 animalTypePicker
@@ -197,10 +200,10 @@ struct AddAnimalScreen: View {
                     }
                 TextField("Color", text: $animal.colour)
                     .autocorrectionDisabled()
-                    .submitLabel(.next)
+                    .submitLabel(.done)
                     .focused($isFocused, equals: .color)
                     .onSubmit {
-                        UIApplication.shared.dismissKeyboard()
+                        isFocused = nil
                     }
                 Picker("Gender", selection: $animal.gender) {
                     ForEach(PetGender.allCases, id: \.self) { type in
@@ -210,9 +213,9 @@ struct AddAnimalScreen: View {
                 HStack {
                     TextField("Weight", value: $animal.weight, format: .number)
                         .keyboardType(.decimalPad)
-                        .submitLabel(.next)
+                        .submitLabel(.done)
                         .onSubmit {
-                            UIApplication.shared.dismissKeyboard()
+                            isFocused = nil
                         }
                     Picker("Unit", selection: $animal.weightUnit) {
                         ForEach(WeightUnit.allCases, id: \.self) { unit in
@@ -222,7 +225,6 @@ struct AddAnimalScreen: View {
                 }
                 DatePicker("Birthday", selection: $animal.birth, displayedComponents: [.date])
             }
-            
             reminderSection
         }
     }
@@ -256,17 +258,15 @@ struct AddAnimalScreen: View {
                 }
             }
             
-            Button {
-                UIApplication.shared.dismissKeyboard()
-                addReminderSheetState = .add
-                hapticManager.playHapticFeedback(type: .success)
-                isShowingAddReminder.toggle()
-            } label: {
-                Image(systemName: "plus")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .foregroundStyle(Color(.attributesText))
-            }
-
+            Image(systemName: "plus")
+                .frame(maxWidth: .infinity, alignment: .center)
+                .foregroundStyle(Color(.attributesText))
+                .onTapGesture {
+                    isFocused = nil
+                    addReminderSheetState = .add
+                    hapticManager.playHapticFeedback(type: .success)
+                    isShowingAddReminder.toggle()
+                }
         }
     }
     

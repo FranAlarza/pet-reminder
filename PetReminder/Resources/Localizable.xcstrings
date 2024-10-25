@@ -113,6 +113,23 @@
         }
       }
     },
+    "Breed:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breed:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raza:"
+          }
+        }
+      }
+    },
     "by" : {
       "localizations" : {
         "en" : {
@@ -671,7 +688,7 @@
         }
       }
     },
-    "Reptile" : {
+    "reptile" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -811,6 +828,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tortuga"
+          }
+        }
+      }
+    },
+    "Type:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo:"
           }
         }
       }

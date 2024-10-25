@@ -49,9 +49,9 @@ struct AnimalRow: View {
     
     func generateAttributeLine(name: String, attribute: String) -> some View {
         HStack {
-            Text(name)
+            Text(LocalizedStringKey(stringLiteral: name))
                 .bold()
-            Text(attribute)
+            Text(LocalizedStringKey(stringLiteral: attribute))
         }
         .font(.system(.subheadline, weight: .light))
     }

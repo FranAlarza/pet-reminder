@@ -8,8 +8,14 @@
 import Foundation
 import SwiftUI
 
+enum AddReminderFocusState {
+    case title
+    case description
+}
+
 struct AddReminderFormView: View {
     
+    @FocusState var focus: AddReminderFocusState?
     @Binding var petNotification: Notification
     let action: () async -> Void
     private let hapticManager = HapticFeedbackManager.shared
@@ -53,8 +59,19 @@ struct AddReminderFormView: View {
                 Section("Reminder Info") {
                     TextField("Title", text: $petNotification.title)
                         .autocorrectionDisabled()
+                        .focused($focus, equals: .title)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            focus = .description
+                        }
+                    
                     TextField("Description", text: $petNotification.body)
                         .autocorrectionDisabled()
+                        .focused($focus, equals: .description)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            focus = nil
+                        }
                 }
                 
                 Section("Frecuency") {
