@@ -89,6 +89,32 @@ final class AnimalViewModel: ObservableObject {
         return false
     }
     
+    func validateForm(_ animal: Animal) -> Bool {
+        if animal.name.isEmpty {
+            return false
+        }
+        if animal.birth >= Date() {
+            return false
+        }
+        
+        if animal.breed.isEmpty {
+            return false
+        }
+        
+        if animal.gender.rawValue.isEmpty {
+            return false
+        }
+        
+        if animal.weight < 0 {
+            return false
+        }
+        
+        if animal.weightUnit.isEmpty {
+            return false
+        }
+        return true
+    }
+    
 //    func suscribeToPets() {
 //        let subscription = FirestoreService.subscribe(PetsEndpoints.getPets) { [weak self] (result: Result<[PetDTO], FirestoreServiceError>) in
 //            self?.petState = .loading

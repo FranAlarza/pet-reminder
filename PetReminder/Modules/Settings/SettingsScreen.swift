@@ -9,11 +9,16 @@ import SwiftUI
 import StoreKit
 import Shake
 import RevenueCatUI
+import FirebaseAuth
+import Inject
 
 struct SettingsScreen: View {
     @Environment(\.requestReview) var requestReview
     @ObservedObject var viewModel: SettingsViewModel = SettingsViewModel()
     @State var isSubscriptionSheetPresented: Bool = false
+    
+    @ObserveInjection var inject
+    
     var body: some View {
         VStack(alignment: .center) {
             List {
@@ -51,6 +56,10 @@ struct SettingsScreen: View {
                 }
                 .listRowBackground(Color.gray.opacity(0.1))
                 
+#if DEBUG
+                Text(Auth.auth().currentUser?.uid ?? "")
+#endif
+                
                 HStack(spacing: 4) {
                     Text("Made with")
                     
@@ -72,6 +81,7 @@ struct SettingsScreen: View {
             PaywallView()
         })
         .scrollContentBackground(.hidden)
+        .enableInjection()
     }
     
     var suscribeButton: some View {
@@ -90,7 +100,15 @@ struct SettingsScreen: View {
             .padding()
             .background {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(.attributesText)
+                    .fill(LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color(.attributesText),   // Base color
+                            Color(.attributeDark),   // Darker shade for depth
+                            Color(.attributeLight)    // Lighter shade for contrast
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
                     .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
             }
         }

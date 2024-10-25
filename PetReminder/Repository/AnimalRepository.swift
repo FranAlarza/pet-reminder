@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 
 protocol AnimalRepositoryProtocol {
     func getAnimalsWithReminders() async throws -> [Animal]
@@ -19,6 +20,7 @@ protocol AnimalRepositoryProtocol {
 final class AnimalRepository: AnimalRepositoryProtocol {
     
     func getAnimalsWithReminders() async throws -> [Animal] {
+        guard let _ = Auth.auth().currentUser else { return [] }
         let animalsDTO: [AnimalDTO] = try await FirestoreService.request(PetsEndpoints.getPets)
         
         var animals: [Animal] = []

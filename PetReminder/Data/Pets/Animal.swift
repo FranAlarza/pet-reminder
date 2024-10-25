@@ -49,3 +49,14 @@ extension Animal {
         notifications = []
     }
 }
+
+extension Date {
+    var age: Int {
+        Calendar.current
+            .dateComponents(
+                [.year],
+                from: self,
+                to: Date()
+            ).year ?? 0
+    }
+}

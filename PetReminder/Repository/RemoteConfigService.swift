@@ -1,5 +1,5 @@
 //
-//  RemoteConfigKey.swift
+//  RemoteConfigService.swift
 //  PetReminder
 //
 //  Created by Fran Alarza on 24/10/24.
@@ -10,6 +10,7 @@ import FirebaseRemoteConfig
 import Shake
 import FirebaseCore
 import FirebaseAnalytics
+import RevenueCat
 
 enum RemoteConfigKey: String {
     case KREVCAT, KSHAKE
@@ -26,6 +27,9 @@ protocol RemoteConfigServiceProtocol {
 
 class RemoteConfigService: RemoteConfigServiceProtocol {
     private let remoteConfig: RemoteConfig
+    
+    private let subscriptionManager = SubscriptionManager.shared
+
     
     #if DEBUG
     let expirationDuration =  5
@@ -75,6 +79,7 @@ private extension RemoteConfigService {
                 let _ = try await fetchConfig()
                 print("[RemoteConfig] - ✅ Fetch succeed")
                 initShake()
+                initRevenueCat()
             } catch {
                 print("[RemoteConfig] - ❌ Fetch failed with \(error) retrying...")
                 initialFetch()
@@ -94,5 +99,11 @@ private extension RemoteConfigService {
         Shake.configuration.isCrashReportingEnabled = true
         Shake.configuration.isConsoleLogsEnabled = true
             
+    }
+    
+    func initRevenueCat() {
+        Purchases.configure(withAPIKey: getString(forKey: .KREVCAT))
+        Purchases.logLevel = .verbose
+        Purchases.shared.delegate = subscriptionManager
     }
 }

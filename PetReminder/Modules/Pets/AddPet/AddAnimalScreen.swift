@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+import Inject
 
 enum AddPetScreenState {
     case error
@@ -56,24 +57,14 @@ struct AddAnimalScreen: View {
     @State var isSubscriptionPresented: Bool = false
     @State var addReminderSheetState: AddReminderSheetState = .add
     
+    @ObserveInjection var inject
+    
     let action: ((Animal) -> Void)?
 
     var body: some View {
         VStack {
-            HStack {
-                dismissButton
-                Spacer()
-            }
-            .padding()
-            
-            petPhoto
-            .padding()
-            .onTapGesture {
-                isTakePhotoSheetShowed = true
-            }
-            
             petInfoForm
-            
+                .padding(.top, mode == .add ? 32 : 0)
             Button(
                 action: {
                     UIApplication.shared.dismissKeyboard()
@@ -106,14 +97,21 @@ struct AddAnimalScreen: View {
                     .padding()
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .background(Color(.attributesText))
+                    .background(viewModel.validateForm(animal) ? Color(.attributesText) : Color(.attributesText).opacity(0.5))
                     .foregroundStyle(.white)
 
             }
+            .disabled(!viewModel.validateForm(animal))
             .cornerRadius(16)
             .padding(.horizontal)
             Spacer()
         }
+        .overlay(alignment: .topLeading, content: {
+            if mode == .add {
+                dismissButton
+            }
+        })
+        .enableInjection()
         .onChange(of: inputImage, perform: { newImage in
             if let newImage {
                 animal.image = newImage.convertImageToBase64String() ?? ""
@@ -148,47 +146,57 @@ struct AddAnimalScreen: View {
                 .font(.system(size: 26))
                 .foregroundStyle(Color(.attributesText))
         })
+        .padding(.leading)
     }
     
     var petPhoto: some View {
         VStack(alignment: .center) {
             if let inputImage {
                 Image(uiImage: inputImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 150, height: 150)
+                    .clipShape(Circle())
+            } else {
+                ZStack {
+                    Circle()
+                        .stroke(style: StrokeStyle(lineWidth: 4))
+                        .fill(Color.gray)
                         .frame(width: 150, height: 150)
-                        .clipShape(Circle())
-                } else {
-                    ZStack {
-                        Circle()
-                            .stroke(style: StrokeStyle(lineWidth: 4))
-                            .fill(Color.gray)
-                            .frame(width: 150, height: 150)
-                        Image(systemName: "dog.fill")
-                    }
-                    
+                    Image(systemName: "photo")
+                        .resizable()
+                        .frame(width: 36, height: 24)
                 }
+                
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .onTapGesture {
+            isTakePhotoSheetShowed = true
         }
     }
     
     var petInfoForm: some View {
         Form {
             Section("Pet Information") {
+                petPhoto
                 animalTypePicker
                 TextField("Name", text: $animal.name)
+                    .autocorrectionDisabled()
                     .submitLabel(.next)
                     .focused($isFocused, equals: .name)
                     .onSubmit {
                         isFocused = .breed
                     }
                 TextField("Breed", text: $animal.breed)
+                    .autocorrectionDisabled()
                     .submitLabel(.next)
                     .focused($isFocused, equals: .breed)
                     .onSubmit {
                         isFocused = .color
                     }
                 TextField("Color", text: $animal.colour)
-                    .submitLabel(.next)
+                    .autocorrectionDisabled()
                     .submitLabel(.next)
                     .focused($isFocused, equals: .color)
                     .onSubmit {
