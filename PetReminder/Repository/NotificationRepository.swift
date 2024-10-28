@@ -13,6 +13,8 @@ protocol NotificationRepositoryProtocol {
     func scheduleNotificationWithAditionalNotification(notification: Notification, animalId: String) async throws
     func removeNotification(animalId: String, notificationIdentifier: String) async throws
     func deleteAllNotifications(animalId: String) async throws
+    func scheduleCustomNotification(notification: Notification, timeInterval: TimeInterval, repeats: Bool) async throws
+    func deleteAllNotifications()
 }
 
 final class NotificationRepository: NotificationRepositoryProtocol {
@@ -28,10 +30,19 @@ final class NotificationRepository: NotificationRepositoryProtocol {
     }
     
     func scheduleNotificationWithAditionalNotification(notification: Notification, animalId: String) async throws {
-        try await scheduleNotification(notification: notification)
-        if notification.aditionalNotifications {
-            try await scheduleAdditionalNotifications(notification: notification)
+        if notification.repeatInterval == .custom {
+            try await scheduleCustomNotification(
+                notification: notification,
+                timeInterval: notification.customTimeInterval?.interval ?? 0,
+                repeats: notification.repeatInterval != .noRepeat
+            )
+        } else {
+            try await scheduleNotification(notification: notification)
+            if notification.aditionalNotifications {
+                try await scheduleAdditionalNotifications(notification: notification)
+            }
         }
+        
         try await FirestoreService.request(
                 NotificationsEndpoints.postNotifications(
                     animalId: animalId,
@@ -66,17 +77,22 @@ final class NotificationRepository: NotificationRepositoryProtocol {
             for notification in reminders {
                 group.addTask {
                     try await FirestoreService.request(NotificationsEndpoints.deleteReminders(animalId: animalId, notificationId: notification.id))
+                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notification.id])
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notification.id])
                 }
             }
             try await group.waitForAll()
         }
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [])
-        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [])
+    }
+    
+    func deleteAllNotifications() {
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+        print("All notifications have been deleted.")
     }
 }
 
 extension NotificationRepository {
-
     
     private func scheduleNotification(notification: Notification) async throws {
         let content = UNMutableNotificationContent()
@@ -84,21 +100,23 @@ extension NotificationRepository {
         content.body = notification.body
         content.sound = .default
         
-        var trigger: UNCalendarNotificationTrigger
+        var trigger: UNNotificationTrigger
         
         switch notification.repeatInterval {
         case .daily:
-            trigger = createTrigger(for: notification.date, components: [.hour, .minute], repeats: true)
+            trigger = createTrigger(for: notification.date, components: [.hour, .minute], repeats: notification.repeatInterval != .noRepeat)
         case .weekly:
-            trigger = createTrigger(for: notification.date, components: [.weekday, .hour, .minute], repeats: true)
+            trigger = createTrigger(for: notification.date, components: [.weekday, .hour, .minute], repeats: notification.repeatInterval != .noRepeat)
         case .monthly:
-            trigger = createTrigger(for: notification.date, components: [.day, .hour, .minute], repeats: true)
+            trigger = createTrigger(for: notification.date, components: [.day, .hour, .minute], repeats: notification.repeatInterval != .noRepeat)
         case .quarterly:
-            trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: true)
+            trigger = createQuarterlyTrigger(for: notification.date)
         case .annually:
-            trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: true)
+            trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: notification.repeatInterval != .noRepeat)
         case .noRepeat:
-            trigger = createTrigger(for: notification.date, components: [.year, .month, .day, .hour, .minute], repeats: false)
+            trigger = createTrigger(for: notification.date, components: [.year, .month, .day, .hour, .minute], repeats: notification.repeatInterval != .noRepeat)
+        case .custom:
+            return
         }
         
         
@@ -111,6 +129,18 @@ extension NotificationRepository {
         let triggerDate = Calendar.current.dateComponents(components, from: date)
         return UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: repeats)
     }
+    
+    private func createQuarterlyTrigger(for date: Date) -> UNCalendarNotificationTrigger {
+        let components: Set<Calendar.Component> = [.month, .day, .hour, .minute]
+        let triggerDate = Calendar.current.dateComponents(components, from: date)
+        
+        // Ajustar el mes en intervalos de 3 meses
+        var triggerComponents = triggerDate
+        triggerComponents.month = (triggerComponents.month ?? 1) % 3 == 0 ? triggerComponents.month : (triggerComponents.month ?? 1) + (3 - ((triggerComponents.month ?? 1) % 3))
+        
+        return UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: true)
+    }
+
     
     private func scheduleAdditionalNotifications(notification: Notification) async throws {
         if let threeDaysBefore = Calendar.current.date(byAdding: .day, value: -3, to: notification.date) {

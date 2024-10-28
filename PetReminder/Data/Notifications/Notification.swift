@@ -15,6 +15,7 @@ struct Notification: Identifiable, Equatable, Hashable {
     var repeatInterval: NotificationRepeatInterval
     var notificationType: NotificationType
     var aditionalNotifications: Bool
+    var customTimeInterval: CustomTimeInterval?
 }
 
 extension Notification: Codable {
@@ -26,6 +27,7 @@ extension Notification: Codable {
         repeatInterval = .daily
         notificationType = .medication
         aditionalNotifications = false
+        customTimeInterval = .eightHours
     }
 }
 
@@ -38,5 +40,6 @@ extension Notification {
         repeatInterval = dto.repeatInterval
         notificationType = dto.notificationType
         aditionalNotifications = dto.aditionalNotifications
+        customTimeInterval = dto.customTimeInterval
     }
 }

@@ -15,6 +15,7 @@ import Inject
 struct SettingsScreen: View {
     @Environment(\.requestReview) var requestReview
     @ObservedObject var viewModel: SettingsViewModel = SettingsViewModel()
+    let notificationService: NotificationServiceProtocol = NotificationService()
     @State var isSubscriptionSheetPresented: Bool = false
     
     @ObserveInjection var inject
@@ -58,6 +59,13 @@ struct SettingsScreen: View {
                 
 #if DEBUG
                 Text(Auth.auth().currentUser?.uid ?? "")
+                Button {
+                    notificationService.deleteAllNotifications()
+                } label: {
+                    Text("Delete All Notifications")
+                        .foregroundStyle(.red)
+                }
+
 #endif
                 
                 HStack(spacing: 4) {

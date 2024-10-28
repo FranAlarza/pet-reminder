@@ -228,6 +228,9 @@
         }
       }
     },
+    "Delete All Notifications" : {
+
+    },
     "Description" : {
       "localizations" : {
         "en" : {
@@ -406,6 +409,9 @@
           }
         }
       }
+    },
+    "Interval" : {
+
     },
     "Made with" : {
       "localizations" : {
@@ -618,7 +624,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cada 4 meses"
+            "value" : "Trimestral"
           }
         }
       }

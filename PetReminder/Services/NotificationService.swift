@@ -11,6 +11,7 @@ protocol NotificationServiceProtocol {
     func scheduleNotificationWithAditionalNotification(notification: Notification, animalId: String) async throws
     func removeNotification(animalId: String, notificationId: String) async throws
     func removeAllNotifications(animalId: String) async throws
+    func deleteAllNotifications()
 }
 
 final class NotificationService: NotificationServiceProtocol {
@@ -31,5 +32,9 @@ final class NotificationService: NotificationServiceProtocol {
     
     func removeAllNotifications(animalId: String) async throws {
         try await repository.deleteAllNotifications(animalId: animalId)
+    }
+    
+    func deleteAllNotifications() {
+        repository.deleteAllNotifications()
     }
 }

@@ -74,6 +74,7 @@ struct AddReminderFormView: View {
                         }
                 }
                 
+                
                 Section("Frecuency") {
                     Picker("Frecuency", selection: $petNotification.repeatInterval) {
                         ForEach(NotificationRepeatInterval.allCases) { repeatInterval in
@@ -81,7 +82,12 @@ struct AddReminderFormView: View {
                         }
                     }
                     DatePicker("Initial Date", selection: $petNotification.date)
-                    Toggle("Notify me before", isOn: $petNotification.aditionalNotifications)
+                    
+                    if petNotification.repeatInterval != .custom {
+                        notCustomForm
+                    } else {
+                        customForm
+                    }
                 }
             }
             
@@ -103,6 +109,60 @@ struct AddReminderFormView: View {
             .cornerRadius(16)
             .padding(.horizontal)
             Spacer()
+        }
+        .animation(.easeInOut, value: petNotification.notificationType)
+    }
+    
+    var notCustomForm: some View {
+        VStack {
+            Toggle("Notify me before", isOn: $petNotification.aditionalNotifications)
+        }
+    }
+    
+    var customForm: some View {
+        VStack {
+            Picker("Interval", selection: $petNotification.customTimeInterval) {
+                ForEach(CustomTimeInterval.allCases) { customInterval in
+                    Text(LocalizedStringResource(stringLiteral: customInterval.title))
+                    .tag(customInterval)
+                }
+            }
+        }
+    }
+}
+
+enum CustomTimeInterval: String, CaseIterable, Identifiable, Codable {
+    case oneMinute
+    case fifteenMinutes
+    case thirtyMinutes
+    case oneHour
+    case fourHours
+    case eightHours
+    case twelveHours
+    
+    var id: String { rawValue }
+    
+    var title: String {
+        switch self {
+        case .oneMinute: return "1 minute"
+        case .fifteenMinutes: return "15 minutes"
+        case .thirtyMinutes: return "30 minutes"
+        case .oneHour: return "1 hour"
+        case .fourHours: return "4 hours"
+        case .eightHours: return "8 hours"
+        case .twelveHours: return "12 hours"
+        }
+    }
+    
+    var interval: TimeInterval {
+        switch self {
+        case .oneMinute: return 60
+        case .fifteenMinutes: return 900
+        case .thirtyMinutes: return 1800
+        case .oneHour: return 3600
+        case .fourHours: return 14400
+        case .eightHours: return 28800
+        case .twelveHours: return 43200
         }
     }
 }

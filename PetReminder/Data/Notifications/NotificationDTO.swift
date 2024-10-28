@@ -15,6 +15,7 @@ struct NotificationDTO: FirestoreIdentifiable, Equatable, Hashable {
     let repeatInterval: NotificationRepeatInterval
     let notificationType: NotificationType
     let aditionalNotifications: Bool
+    let customTimeInterval: CustomTimeInterval?
 }
 
 extension NotificationDTO {
@@ -26,5 +27,6 @@ extension NotificationDTO {
         repeatInterval = notifcation.repeatInterval
         notificationType = notifcation.notificationType
         aditionalNotifications = notifcation.aditionalNotifications
+        customTimeInterval = notifcation.customTimeInterval
     }
 }

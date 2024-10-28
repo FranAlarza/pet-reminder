@@ -261,6 +261,7 @@ struct AddAnimalScreen: View {
             Image(systemName: "plus")
                 .frame(maxWidth: .infinity, alignment: .center)
                 .foregroundStyle(Color(.attributesText))
+                .contentShape(Rectangle())
                 .onTapGesture {
                     isFocused = nil
                     addReminderSheetState = .add
