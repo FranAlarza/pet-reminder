@@ -26,6 +26,7 @@ final class NotificationRepository: NotificationRepositoryProtocol {
         }
         
     }
+    
     func scheduleNotificationWithAditionalNotification(notification: Notification, animalId: String) async throws {
         try await scheduleNotification(notification: notification)
         if notification.aditionalNotifications {
@@ -39,10 +40,24 @@ final class NotificationRepository: NotificationRepositoryProtocol {
             )
     }
     
+    func scheduleCustomNotification(notification: Notification, timeInterval: TimeInterval, repeats: Bool) async throws {
+        let content = UNMutableNotificationContent()
+        content.title = notification.title
+        content.body = notification.body
+        content.sound = .default
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: repeats)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        try await UNUserNotificationCenter.current().add(request)
+        print("Custom notification scheduled with interval: \(timeInterval) seconds, repeats: \(repeats)")
+    }
+    
     func removeNotification(animalId: String, notificationIdentifier: String) async throws {
         try await FirestoreService.request(NotificationsEndpoints.deleteReminders(animalId: animalId, notificationId: notificationIdentifier))
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
         UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
+
     }
     
     func deleteAllNotifications(animalId: String) async throws {
@@ -79,7 +94,7 @@ extension NotificationRepository {
         case .monthly:
             trigger = createTrigger(for: notification.date, components: [.day, .hour, .minute], repeats: true)
         case .quarterly:
-            trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: false)
+            trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: true)
         case .annually:
             trigger = createTrigger(for: notification.date, components: [.month, .day, .hour, .minute], repeats: true)
         case .noRepeat:
