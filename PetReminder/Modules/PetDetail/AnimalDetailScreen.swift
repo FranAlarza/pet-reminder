@@ -104,6 +104,7 @@ struct AnimalDetailScreen: View {
                                     .fill(Color(.systemBackground))
                                     .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
                             }
+                            .padding(.horizontal)
                             .onTapGesture {
                                 isAddPetSheetOpen.toggle()
                             }
