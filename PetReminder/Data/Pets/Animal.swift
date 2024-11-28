@@ -11,11 +11,11 @@ struct Animal: Hashable, Identifiable {
     var id: String = UUID().uuidString
     var imagePath: String = ""
     var image: String = ""
-    var name: String = "Daisy"
-    var breed: String = "Podenco"
-    var type: AnimalType = .other
+    var name: String = ""
+    var breed: String = ""
+    var type: AnimalType = .dog
     var birth: Date = Date()
-    var colour: String = "Canela"
+    var colour: String = ""
     var weight: Double = 0.0
     var weightUnit: String = ""
     var gender: PetGender = .male
@@ -47,5 +47,16 @@ extension Animal {
         gender = dto.gender
         createdAt = dto.createdAt.dateValue()
         notifications = []
+    }
+}
+
+extension Date {
+    var age: Int {
+        Calendar.current
+            .dateComponents(
+                [.year],
+                from: self,
+                to: Date()
+            ).year ?? 0
     }
 }

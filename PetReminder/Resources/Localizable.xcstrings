@@ -113,6 +113,23 @@
         }
       }
     },
+    "Breed:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Breed:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raza:"
+          }
+        }
+      }
+    },
     "by" : {
       "localizations" : {
         "en" : {
@@ -123,7 +140,7 @@
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "por"
           }
         }
@@ -195,22 +212,6 @@
         }
       }
     },
-    "Date" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Date"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fecha"
-          }
-        }
-      }
-    },
     "Delete" : {
       "localizations" : {
         "en" : {
@@ -226,6 +227,9 @@
           }
         }
       }
+    },
+    "Delete All Notifications" : {
+
     },
     "Description" : {
       "localizations" : {
@@ -249,7 +253,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "dog"
+            "value" : "Dog"
           }
         },
         "es" : {
@@ -272,6 +276,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error al cargar las mascotas"
+          }
+        }
+      }
+    },
+    "female" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Female"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hembra"
           }
         }
       }
@@ -325,10 +346,71 @@
         }
       }
     },
+    "Gender" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gender"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Género"
+          }
+        }
+      }
+    },
     "Get Subscription" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Subscription"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suscribirse"
+          }
+        }
+      }
     },
     "INFO" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INFO"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "INFO"
+          }
+        }
+      }
+    },
+    "Initial Date" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Initial Date"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha Inicio"
+          }
+        }
+      }
+    },
+    "Interval" : {
 
     },
     "Made with" : {
@@ -343,6 +425,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hecho con"
+          }
+        }
+      }
+    },
+    "male" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Male"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Macho"
           }
         }
       }
@@ -525,7 +624,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cada 4 meses"
+            "value" : "Trimestral"
           }
         }
       }
@@ -595,7 +694,7 @@
         }
       }
     },
-    "Reptile" : {
+    "reptile" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -617,19 +716,32 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Request New Feature"
+            "value" : "Contact with us"
           }
         },
         "es" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "Pedir nueva funcionalidad"
+            "state" : "translated",
+            "value" : "Contacta con nosotros"
           }
         }
       }
     },
     "Restore purchases" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore purchases"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar Compras"
+          }
+        }
+      }
     },
     "Settings" : {
       "localizations" : {
@@ -665,7 +777,14 @@
       }
     },
     "Subscribe for premium features" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe for premium features"
+          }
+        }
+      }
     },
     "Take Photo" : {
       "localizations" : {
@@ -719,6 +838,23 @@
         }
       }
     },
+    "Type:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipo:"
+          }
+        }
+      }
+    },
     "Unit" : {
       "localizations" : {
         "en" : {
@@ -735,6 +871,23 @@
         }
       }
     },
+    "Unlock all pro features" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock all pro features"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hazte Premium"
+          }
+        }
+      }
+    },
     "Update Pet" : {
       "localizations" : {
         "en" : {
@@ -747,6 +900,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Actualizar Mascota"
+          }
+        }
+      }
+    },
+    "Upgrade Now!" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upgrade Now!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "¡Sube de nivel!"
           }
         }
       }

@@ -74,7 +74,7 @@ struct AnimalDetailScreen: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
-                .fill(Color(.systemBackground))
+                .fill(Color(.primary))
                 .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
         }
     }
@@ -93,21 +93,42 @@ struct AnimalDetailScreen: View {
                     .background(.attributesText)
                     .padding()
                 
-                ScrollView {
-                    VStack(spacing: 12) {
-                        ForEach(animal.notifications) { reminder in
-                            ReminderRow(petNotification: reminder)
-                        }
+                if animal.notifications.isEmpty {
+                    HStack {
+                        Label("Add Reminder", systemImage: "plus.circle")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundStyle(Color(.attributesText))
+                            .padding()
+                            .background {
+                                RoundedRectangle(cornerSize: CGSize(width: 16, height: 16))
+                                    .fill(Color(.systemBackground))
+                                    .shadow(color: Color.gray.opacity(0.4), radius: 8, x: 0, y: 2)
+                            }
+                            .padding(.horizontal)
+                            .onTapGesture {
+                                isAddPetSheetOpen.toggle()
+                            }
+                        Spacer()
                     }
-                    .padding(.horizontal)
+                    Spacer()
+                } else {
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            ForEach(animal.notifications) { reminder in
+                                ReminderRow(petNotification: reminder)
+                            }
+                        }
+                        .padding(.horizontal)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                
             }
             .padding(.top, 48)
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerSize: CGSize(width: 36, height: 36))
-                    .fill(Color(.detailSheet))
+                    .fill(Color(.primary))
             }
         }
     }

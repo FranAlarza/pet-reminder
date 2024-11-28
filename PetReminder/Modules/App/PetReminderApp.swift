@@ -17,13 +17,8 @@ struct PetReminderApp: App {
     @Environment(\.scenePhase) var scenePhase
     private let authService: AuthServiceProtocol = AuthService()
     private let notificationManager: NotificationRepositoryProtocol = NotificationRepository()
-    private let subscriptionManager = SubscriptionManager.shared
+    private let remoteConfigService: RemoteConfigServiceProtocol = RemoteConfigService()
     
-    init() {
-        Purchases.configure(withAPIKey: "appl_FxmhIZjdmrByUxbJCTlbHTlZpFi")
-        Purchases.logLevel = .verbose
-        Purchases.shared.delegate = subscriptionManager
-    }
     var body: some Scene {
         WindowGroup {
             MainTabBar()

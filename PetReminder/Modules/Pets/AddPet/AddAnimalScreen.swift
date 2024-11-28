@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseCore
+import Inject
 
 enum AddPetScreenState {
     case error
@@ -29,6 +30,10 @@ enum AddAnimalState {
     case edit
 }
 
+enum FocusedField {
+    case name, breed, color
+}
+
 struct AddAnimalScreen: View {
     let mode: AddAnimalState
     private let hapticManager = HapticFeedbackManager.shared
@@ -36,6 +41,7 @@ struct AddAnimalScreen: View {
     @EnvironmentObject var viewModel: AnimalViewModel
     @State var state: AddPetScreenState?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @FocusState var isFocused: FocusedField?
     
     // Form Data
     @State var animal = Animal()
@@ -51,27 +57,17 @@ struct AddAnimalScreen: View {
     @State var isSubscriptionPresented: Bool = false
     @State var addReminderSheetState: AddReminderSheetState = .add
     
+    @ObserveInjection var inject
+    
     let action: ((Animal) -> Void)?
 
     var body: some View {
         VStack {
-            HStack {
-                dismissButton
-                Spacer()
-            }
-            .padding()
-            
-            petPhoto
-            .padding()
-            .onTapGesture {
-                isTakePhotoSheetShowed = true
-            }
-            
             petInfoForm
-            
+                .padding(.top, mode == .add ? 32 : 0)
             Button(
                 action: {
-                    UIApplication.shared.dismissKeyboard()
+                    isFocused = nil
                     Task {
                         state = .loading
                         switch mode {
@@ -101,24 +97,31 @@ struct AddAnimalScreen: View {
                     .padding()
                     .font(.headline)
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .background(Color(.attributesText))
+                    .background(viewModel.validateForm(animal) ? Color(.attributesText) : Color(.attributesText).opacity(0.5))
                     .foregroundStyle(.white)
 
             }
+            .disabled(!viewModel.validateForm(animal))
             .cornerRadius(16)
             .padding(.horizontal)
             Spacer()
         }
+        .enableInjection()
+        .animation(.easeInOut, value: animal.notifications)
+        .overlay(alignment: .topLeading, content: {
+            if mode == .add {
+                dismissButton
+            }
+        })
+        .overlay(content: {
+            if state == .loading {
+                LoadingView()
+            }
+        })
         .onChange(of: inputImage, perform: { newImage in
             if let newImage {
                 animal.image = newImage.convertImageToBase64String() ?? ""
                 hapticManager.playHapticFeedback(type: .success)
-            }
-        })
-        .animation(.easeInOut, value: animal.notifications)
-        .overlay(content: {
-            if state == .loading {
-                LoadingView()
             }
         })
         .sheet(isPresented: $isTakePhotoSheetShowed) {
@@ -130,11 +133,13 @@ struct AddAnimalScreen: View {
                 selectedImage: $inputImage
             )
         }
-        .sheet(isPresented: $isShowingAddReminder) {
+        .sheet(isPresented: $isShowingAddReminder, onDismiss: {
+            animalNotification = .init()
+        }) {
             addRemainderForm
                 .presentationDetents([.fraction(0.6)])
         }
-    }
+     }
     
     var dismissButton: some View {
         Button(action: dismiss.callAsFunction,
@@ -143,43 +148,75 @@ struct AddAnimalScreen: View {
                 .font(.system(size: 26))
                 .foregroundStyle(Color(.attributesText))
         })
+        .padding(.leading)
     }
     
     var petPhoto: some View {
         VStack(alignment: .center) {
             if let inputImage {
                 Image(uiImage: inputImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 150, height: 150)
+                    .clipShape(Circle())
+            } else {
+                ZStack {
+                    Circle()
+                        .stroke(style: StrokeStyle(lineWidth: 4))
+                        .fill(Color.gray)
                         .frame(width: 150, height: 150)
-                        .clipShape(Circle())
-                } else {
-                    ZStack {
-                        Circle()
-                            .stroke(style: StrokeStyle(lineWidth: 4))
-                            .fill(Color.gray)
-                            .frame(width: 150, height: 150)
-                        Image(systemName: "dog.fill")
-                    }
-                    
+                    Image(systemName: "photo")
+                        .resizable()
+                        .frame(width: 36, height: 24)
                 }
+                
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .onTapGesture {
+            isFocused = nil
+            isTakePhotoSheetShowed = true
         }
     }
     
     var petInfoForm: some View {
-        Form {
+        List {
             Section("Pet Information") {
+                petPhoto
                 animalTypePicker
                 TextField("Name", text: $animal.name)
+                    .autocorrectionDisabled()
                     .submitLabel(.next)
+                    .focused($isFocused, equals: .name)
+                    .onSubmit {
+                        isFocused = .breed
+                    }
                 TextField("Breed", text: $animal.breed)
+                    .autocorrectionDisabled()
                     .submitLabel(.next)
+                    .focused($isFocused, equals: .breed)
+                    .onSubmit {
+                        isFocused = .color
+                    }
                 TextField("Color", text: $animal.colour)
-                    .submitLabel(.next)
+                    .autocorrectionDisabled()
+                    .submitLabel(.done)
+                    .focused($isFocused, equals: .color)
+                    .onSubmit {
+                        isFocused = nil
+                    }
+                Picker("Gender", selection: $animal.gender) {
+                    ForEach(PetGender.allCases, id: \.self) { type in
+                        Text(LocalizedStringResource(stringLiteral: type.rawValue)).tag(type)
+                    }
+                }
                 HStack {
                     TextField("Weight", value: $animal.weight, format: .number)
-                        .keyboardType(.numberPad)
-                        .submitLabel(.next)
+                        .keyboardType(.decimalPad)
+                        .submitLabel(.done)
+                        .onSubmit {
+                            isFocused = nil
+                        }
                     Picker("Unit", selection: $animal.weightUnit) {
                         ForEach(WeightUnit.allCases, id: \.self) { unit in
                             Text(LocalizedStringResource(stringLiteral: unit.rawValue)).tag(unit.rawValue)
@@ -221,16 +258,16 @@ struct AddAnimalScreen: View {
                 }
             }
             
-            Button {
-                addReminderSheetState = .add
-                hapticManager.playHapticFeedback(type: .success)
-                isShowingAddReminder.toggle()
-            } label: {
-                Image(systemName: "plus")
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .foregroundStyle(Color(.attributesText))
-            }
-
+            Image(systemName: "plus")
+                .frame(maxWidth: .infinity, alignment: .center)
+                .foregroundStyle(Color(.attributesText))
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    isFocused = nil
+                    addReminderSheetState = .add
+                    hapticManager.playHapticFeedback(type: .success)
+                    isShowingAddReminder.toggle()
+                }
         }
     }
     

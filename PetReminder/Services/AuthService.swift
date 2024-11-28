@@ -18,14 +18,19 @@ final class AuthService: AuthServiceProtocol {
     func login() async {
         do {
             AnalitycsManager.shared.log(.loginLaunched)
-            let userId = Auth.auth().currentUser?.uid ?? ""
+            let data = try await Auth.auth().signInAnonymously()
+            let userId = data.user.uid
             let userExist = try await Firestore.firestore().collection("users").whereField("id", isEqualTo: userId).getDocuments()
             if !userExist.isEmpty {
                 debugPrint("User already registered")
+            } else {
+                let dto = RegisterDto(id: data.user.uid)
+                let endpoint = AuthEndpoints.register(dto)
+                try await FirestoreService.request(endpoint)
+                debugPrint("User created")
             }
         } catch {
             AnalitycsManager.shared.log(.registerLaunched)
-            await register()
         }
     }
     

@@ -8,6 +8,7 @@
 import Foundation
 
 enum NotificationRepeatInterval: String, CaseIterable, Identifiable, Codable {
+    case custom
     case noRepeat
     case daily
     case weekly

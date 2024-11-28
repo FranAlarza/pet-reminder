@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import FirebaseAuth
 
 protocol AnimalRepositoryProtocol {
     func getAnimalsWithReminders() async throws -> [Animal]
@@ -19,6 +20,7 @@ protocol AnimalRepositoryProtocol {
 final class AnimalRepository: AnimalRepositoryProtocol {
     
     func getAnimalsWithReminders() async throws -> [Animal] {
+        guard let _ = Auth.auth().currentUser else { return [] }
         let animalsDTO: [AnimalDTO] = try await FirestoreService.request(PetsEndpoints.getPets)
         
         var animals: [Animal] = []
@@ -60,9 +62,12 @@ final class AnimalRepository: AnimalRepositoryProtocol {
     func delete(_ animal: Animal) async throws {
         AnalitycsManager.shared.log(.deleteAnimal(AnimalAnalitycsEvent(animal: animal)))
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-            taskGroup.addTask {
-                try await FirestoreService.deleteImage(animal.imagePath)
+            if !animal.imagePath.isEmpty {
+                taskGroup.addTask {
+                    try await FirestoreService.deleteImage(animal.imagePath)
+                }
             }
+            
             taskGroup.addTask {
                 try await FirestoreService.request(PetsEndpoints.deletePet(id: animal.id))
             }
